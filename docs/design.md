@@ -74,8 +74,10 @@ blokują kafel; jednostki napierają na blokadę (obustronne obrażenia „przep
 ## Jednostki i wieże
 
 ### WEWNĄTRZ — wieże (stawiane na kaflach dziedzińca / przy drzwiach)
-- **Kordon policji** (20) — blokuje kafel, odpycha sąsiadów. „Policja podkreśla, że nie weszła do budynku."
-- **Barierka** (10) — tania ściana.
+- **Kordon policji** (25) — blokuje kafel, odpycha. Napór tłumu na jedną wieżę jest **ograniczony** (pushCap), więc
+  dziesięciu protestujących nie zdejmuje kordonu szybciej niż trzech; gdy nikt nie napiera, kordon się regeneruje.
+- **Oddział prewencji** (45) — dwa szeregi z tarczami: 600 HP, większy odrzut, szybsza regeneracja.
+- **Barierka** (10) — tania ściana, tłum przewraca ją powoli.
 - **Sędzia w drzwiach** (35, tylko kafle przy drzwiach) — aura legitymacji: spowalnia; Prezydent się przez niego „przeciska".
 - **Zarządzenie** (30) — biurko z drukarką, strzela paragrafami § na dystans.
 - **Komunikat na X** (25) — co kilka sekund fala ogłuszająca tłum; każdy strzał POLSKA −1.
@@ -96,7 +98,13 @@ blokują kafel; jednostki napierają na blokadę (obustronne obrażenia „przep
 ### NA ZEWNĄTRZ — bossowie
 - **Prezes Trybunału** (50) — aura szybkości; policja nie wpuszcza go dalej niż brama, stoi i buffuje. POLSKA −8.
 - **Prezes partii** (50) — „Państwo policyjne": kordony ×2 obrażeń przez 15 s. POLSKA −8.
-- **Prezydent** (100, od 0:55) — nie da się go zablokować, tylko spowolnić (przepychanka z sędziami); jeśli wejdzie: „Zdjęcie z wnętrza TK". POLSKA −15.
+- **Prezydent** (100, od 0:55) — jedyny, kto przechodzi przez kordon: odporny na ogłuszenie i „przerwę w czynnościach",
+  policja odpycha go 4× słabiej, sędziowie tylko spowalniają (przepychanka). Jeśli wejdzie: „Zdjęcie z wnętrza TK". POLSKA −15.
+
+**Zasada drzwi:** zwykłe jednostki nie wchodzą do budynku. Po dotarciu do drzwi dobijają się 3,5 s i zostają
+wyprowadzone; licznik „pod drzwiami" (20 = nominalne zwycięstwo zewnątrz). Tłum rozdziela się losowo między furtkę
+a bramę (60/40), więc obrona musi trzymać oba wejścia. To odzwierciedla realny przebieg nocy: kordon wytrzymał,
+przecięto tylko zabezpieczenie furtki, a do środka weszła dopiero grupa prezydenta.
 
 ## Zegar i linia czasu
 

@@ -48,7 +48,7 @@ const AI = {
     const has = k => alive.some(u => u.key === k);
     const towers = game.towers.length, judges = game.towers.filter(t => t.key === 'judge').length;
     // bossowie wg linii czasu: gdy boss jest „należny", AI oszczędza na niego
-    const due = [['tkpresident', 45], ['president', OUTSIDE_BOSSES.president.unlockMin], ['chairman', 100]].find(([k, m]) => !this.used[k] && min >= m);
+    const due = [['president', OUTSIDE_BOSSES.president.unlockMin], ['tkpresident', 45], ['chairman', 100]].find(([k, m]) => !this.used[k] && min >= m);
     if (due) {
       const [key] = due; const cost = OUTSIDE_BOSSES[key].cost;
       if (money >= cost) { this.used[key] = 1; game.summonBoss(key, true); return; }
