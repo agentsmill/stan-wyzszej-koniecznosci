@@ -23,11 +23,11 @@ clip s03 "$T1" 5.2 9.0 ov_inside 0.5 7.0
 clip s04 "$T1" 18.8 6.5 "" 
 card s05 card_03 2.0
 # zbliżenie na licznik POLSKA (ujęcie 2, wezwanie Prezydenta = -15)
-ffmpeg -v error -y -ss 18.6 -t 4.4 -i "$T2" -loop 1 -framerate 30 -t 4.4 -i "$C/ov_citizens.png" \
-  -filter_complex "[0:v]fps=30,crop=441:104:1419:8,scale=1481:349:flags=neighbor,pad=1920:1080:(ow-iw)/2:(oh-ih)/2-120:color=0x05070f[z];[1:v]format=rgba,fade=t=in:st=0.3:d=0.35:alpha=1,fade=t=out:st=3.8:d=0.45:alpha=1[o];[z][o]overlay=0:0:shortest=1,format=yuv420p" "${ENC[@]}" "$S/s06.mp4"; echo "seg s06"
+ffmpeg -v error -y -ss 20.0 -t 4.4 -i "$T2" -loop 1 -framerate 30 -t 4.4 -i "$C/ov_citizens.png" \
+  -filter_complex "[0:v]fps=30,crop=528:106:1326:8,scale=1680:337:flags=neighbor,pad=1920:1080:(ow-iw)/2:(oh-ih)/2-120:color=0x05070f[z];[1:v]format=rgba,fade=t=in:st=0.3:d=0.35:alpha=1,fade=t=out:st=3.8:d=0.45:alpha=1[o];[z][o]overlay=0:0:shortest=1,format=yuv420p" "${ENC[@]}" "$S/s06.mp4"; echo "seg s06"
 clip s07 "$T2" 2.5 7.5 ov_outside 0.4 6.0
-clip s08 "$T2" 29.0 10.6 ov_president 0.5 8.5
-clip s09 "$T2" 39.6 7.4 ov_ending 3.0 6.4
+clip s08 "$T2" 29.5 10.5 ov_president 0.5 8.4
+clip s09 "$T2" 40.0 7.4 ov_ending 3.0 6.4
 card s10 card_04 4.5
 
 ls "$S"/s*.mp4 | sed "s|^|file '$PWD/|; s|$|'|" > "$S/list.txt"
