@@ -107,7 +107,7 @@ const MAP = {
 
   /* ---------- pola przepływu (Dijkstra, 4 sąsiedztwo) ---------- */
   computeField(targets, opts = {}) {
-    const INF = 1e9, N = ISO.COLS, Mz = ISO.ROWS;
+    const INF = 1e9, N = ISO.COLS, Mz = ISO.ROWS; const blockGate = opts.blockGate ? this.gates[opts.blockGate] : null;
     const dist = []; for (let y = 0; y < Mz; y++) dist.push(new Array(N).fill(INF));
     const open = [];
     for (const t of targets) { if (ISO.inBounds(t.gx, t.gy)) { dist[t.gy][t.gx] = 0; open.push([0, t.gx, t.gy]); } }
@@ -120,6 +120,7 @@ const MAP = {
       for (const [dx, dy] of [[1, 0], [-1, 0], [0, 1], [0, -1]]) {
         const nx = x + dx, ny = y + dy;
         if (!this.isWalkable(nx, ny)) continue;
+        if (blockGate && blockGate.gx === nx && blockGate.gy === ny) continue; // „swoje" wejście: drugiej bramy nie używamy
         let c = 1;
         const tw = this.towerAt[ny][nx]; if (tw) { if (towerCost >= 1e5) continue; c += towerCost; }
         if (this.terrain[ny][nx] === 'G') c += 0.6;
@@ -131,8 +132,8 @@ const MAP = {
   },
   rebuildFields() {
     this.fields.main = this.computeField([this.doors.main]);
-    this.fields.in_furtka = this.computeField([this.gates.furtka.inner]);
-    this.fields.in_brama = this.computeField([this.gates.brama.inner]);
+    this.fields.in_furtka = this.computeField([this.gates.furtka.inner], { blockGate: 'brama' });
+    this.fields.in_brama = this.computeField([this.gates.brama.inner], { blockGate: 'furtka' });
     this.fields.side = this.computeField([this.doors.side], { towerCost: 4 });
     this.fields.gate = this.computeField(Object.values(this.gates).filter(g => g.locked).flatMap(g => g.along === 'gx'
       ? [g.approach, { gx: g.approach.gx - 1, gy: g.approach.gy }, { gx: g.approach.gx + 1, gy: g.approach.gy }]

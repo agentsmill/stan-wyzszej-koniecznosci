@@ -84,13 +84,15 @@ class Unit {
       if (this.doorT >= CFG.DOOR_TIME) game.onBreach(this);
       return;
     }
-    // przed wejściem na dziedziniec każdy idzie „swoją" bramą, potem do drzwi
+
+    let usingGate = false;
+    // przed wejściem na dziedziniec każdy idzie „swoją" bramą; zamknięta furtka = napieraj / przetnij
     if (!MAP.courtyard(c.gx, c.gy) && !def.stopAtGate && this.targetDoor === 'main') {
       const vf = MAP.fields[this.via]; const vd = vf?.[c.gy]?.[c.gx];
       if (vd !== undefined && vd < 1e9) field = vf;
+      else if (this.via === 'in_furtka' && MAP.gates.furtka.locked) { field = MAP.fields.gate; usingGate = true; }
     }
     let d = field[c.gy]?.[c.gx];
-    let usingGate = false;
     if (d === undefined || d >= 1e9) { field = MAP.fields.gate; d = field[c.gy]?.[c.gx]; usingGate = true; }
     if (d === undefined || d >= 1e9) { this.anim = 'idle'; this.state = 'stuck'; return; }
 

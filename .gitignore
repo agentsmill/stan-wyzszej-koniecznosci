@@ -9,3 +9,7 @@ promo/*.wav
 promo/raw_v/
 promo/seg_v/
 promo/frames_v/
+promo/raw_fast/
+promo/frames_f/
+promo/kinetic/
+promo/seg_fast/
