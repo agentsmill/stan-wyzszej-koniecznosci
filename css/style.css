@@ -15,7 +15,7 @@ html, body { margin: 0; height: 100%; background: var(--bg); color: var(--ink); 
 /* HUD */
 #hud { position: absolute; left: 0; top: 0; width: 1280px; height: 768px; pointer-events: none; transform-origin: 0 0; }
 #topbar { position: absolute; top: 0; left: 0; right: 0; display: grid; grid-template-columns: 1fr 1.4fr 1fr; gap: 8px; padding: 8px 10px; background: linear-gradient(rgba(5,7,15,.95), rgba(5,7,15,.0)); }
-#side-box, #clock-box, #polska-box { background: var(--panel); border: 2px solid #2a2d4a; padding: 6px 10px; }
+#side-box, #clock-box, #polska-box { background: var(--panel); border: 2px solid #2a2d4a; padding: 6px 10px; min-width: 0; overflow: hidden; }
 #side-name { font-family: 'Press Start 2P', monospace; font-size: 13px; letter-spacing: 1px; }
 #side-slogan { opacity: .8; font-size: 18px; }
 .inside-ui #side-name { color: var(--inside); }
