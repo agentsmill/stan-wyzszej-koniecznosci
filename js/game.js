@@ -31,7 +31,7 @@ const GAME = {
     this.money = { inside: CFG.ECON.inside.start, outside: CFG.ECON.outside.start };
     this.units = []; this.towers = []; this.projectiles = []; this.fx = []; this.clash = 0; this.breaches = 0; this.citizenTimer = 6;
     this.stats = { towers: 0, units: 0, bosses: 0, citizensLost: 0, citizensFiled: 0, breaches: 0, towersLost: 0, unitsLost: 0 };
-    this.bossUsed = {}; this.premierActive = false; this.premierUntil = 0; this.policeStateUntil = 0; this.freezeUntil = 0; this.selected = null; this.timelineIdx = 0;
+    this.bossUsed = {}; this.judgeCooldownUntil = 0; this.premierActive = false; this.premierUntil = 0; this.policeStateUntil = 0; this.freezeUntil = 0; this.selected = null; this.timelineIdx = 0;
     MAP.build(); MAP.rebuildFields(); AI.reset();
     UI.showGame(this); UI.log(T('log.night'), 'ev');
     UI.log(T(side === 'inside' ? 'log.intro.inside' : 'log.intro.outside'));
@@ -122,6 +122,10 @@ const GAME = {
   build(key, gx, gy, byAI = false) {
     const def = TOWERS[key]; const side = 'inside';
     if (!MAP.canBuild(gx, gy, def) || this.money[side] < def.cost) return false;
+    if (def.maxAlive) { // sędziów jest tylu, ilu jest; po wypchnięciu przegrupowanie
+      if (this.towers.filter(t => t.key === key).length >= def.maxAlive) { if (!byAI) UI.hint(T('hint.judgeMax', { n: def.maxAlive })); return false; }
+      if (this.time < (this.judgeCooldownUntil || 0)) { if (!byAI) UI.hint(T('hint.judgeCooldown', { s: Math.ceil(this.judgeCooldownUntil - this.time) })); return false; }
+    }
     this.money[side] -= def.cost; this.polskaCost(def.polska);
     const t = new Tower(key, def, gx, gy); this.towers.push(t); MAP.towerAt[gy][gx] = t; MAP.fieldsDirty = true; this.stats.towers++;
     this.floatAt(gx, gy, def.name, '#7c5cff');
@@ -193,6 +197,7 @@ const GAME = {
   },
   onTowerDied(t, src) {
     MAP.towerAt[t.gy][t.gx] = null; MAP.fieldsDirty = true; this.stats.towersLost++;
+    if (t.key === 'judge' && t.def.rebuildCooldown) { this.judgeCooldownUntil = this.time + t.def.rebuildCooldown; UI.log(T('log.judgeRegroup'), 'bad'); }
     this.floatAt(t.gx, t.gy, T(t.key === 'cordon' ? 'float.cordonBroke' : (t.key === 'judge' ? 'float.judgeLeft' : 'float.toppled')), '#ff8080');
   },
   onCitizenLost(u, why) { this.stats.citizensLost++; this.polskaCost(CFG.POLSKA_COST.citizenLost); UI.log(T('log.citizenLost', { why: T('why.' + why) }), 'bad'); },

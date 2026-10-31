@@ -6,9 +6,9 @@ const AI = {
   timer: 0,
   /* plan obrony: kolejność ma znaczenie, zniszczone wieże są odbudowywane */
   insidePlan: [
-    ['cordon', 12, 9], ['cordon', 7, 5], ['judge', 14, 5], ['judge', 17, 3],
+    ['cordon', 12, 9], ['cordon', 7, 5], ['judge', 14, 5], ['judge', 17, 3], ['judge', 16, 4], ['judge', 16, 2],
     ['riot', 12, 8], ['barrier', 11, 9], ['barrier', 13, 9], ['decree', 10, 8],
-    ['riot', 8, 5], ['tweet', 14, 8], ['cordon', 16, 5], ['decree', 15, 7], ['cordon', 17, 4],
+    ['decree', 17, 5], ['riot', 8, 5], ['tweet', 14, 8], ['riot', 16, 5], ['decree', 15, 7], ['decree', 18, 3], ['cordon', 17, 4],
     ['barrier', 14, 9], ['barrier', 10, 9], ['cordon', 12, 8], ['tweet', 9, 7],
     ['cordon', 11, 11], ['decree', 13, 7], ['cordon', 13, 8], ['barrier', 8, 6],
   ],
@@ -48,12 +48,14 @@ const AI = {
     const has = k => alive.some(u => u.key === k);
     const towers = game.towers.length, judges = game.towers.filter(t => t.key === 'judge').length;
     // bossowie wg linii czasu: gdy boss jest „należny", AI oszczędza na niego
-    const due = [['president', OUTSIDE_BOSSES.president.unlockMin], ['tkpresident', 45], ['chairman', 100]].find(([k, m]) => !this.used[k] && min >= m);
+    const due = [['president', OUTSIDE_BOSSES.president.unlockMin], ['tkpresident', 40], ['chairman', 95]].find(([k, m]) => !this.used[k] && min >= m);
     if (due) {
       const [key] = due; const cost = OUTSIDE_BOSSES[key].cost;
       if (money >= cost) { this.used[key] = 1; game.summonBoss(key, true); return; }
-      // w czasie oszczędzania tylko poseł do furtki
-      if (MAP.gates.furtka.locked && !has('mp') && money >= UNITS.mp.cost) game.spawnUnit('mp', 1, true);
+      // w czasie oszczędzania: poseł do furtki, prawnicy na sędziów, co trzeci tick protestujący
+      if (MAP.gates.furtka.locked && !has('mp') && money >= UNITS.mp.cost) { game.spawnUnit('mp', 1, true); return; }
+      if (key === 'president' && judges >= 2 && !has('lawyer') && money >= UNITS.lawyer.cost + 20) { game.spawnUnit('lawyer', 0, true); return; }
+      if (money > 30 && Math.random() < 0.35) game.spawnUnit('protester', Math.floor(Math.random() * 3), true);
       return;
     }
     // jednostki

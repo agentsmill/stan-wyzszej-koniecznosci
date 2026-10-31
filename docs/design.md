@@ -143,3 +143,21 @@ Multiplayer, globalna tablica wyników, dźwięk (opcjonalnie), mobile.
 
 Strony sporu relacjonują tę samą noc sprzecznie (czy prezydenta szarpano, czy sędziowie blokowali drzwi).
 Gra nie rozstrzyga tych sprzeczności; w logu i na pasku zdarzeń cytuje obie strony.
+
+## Balans (stan na 31.10.2026, wieczór)
+
+Po testach z graczem i symulacjach AI kontra AI:
+
+- **Odrzut kordonu dzieli się między napierających.** Jeden protestujący dostaje pełne 10/s, pięciu po 2/s.
+  Wcześniej kordon bił każdego sąsiada pełną siłą i był nie do ruszenia. Teraz 4–5 protestujących (32–40 poparcia)
+  przewraca kordon (25 legitymacji) tracąc połowę ludzi; 3 giną, zanim go zdejmą. Barierka: 80 HP, limit naporu 14/s,
+  czyli kilku ludzi w parę sekund. Oddział prewencji: 440 HP, odrzut 16/s dzielony, limit 20/s.
+- **Prezydent** (120 poparcia, 900 HP): policja go przepuszcza (spowolniony do 40 %, odrzut ×0,6), ale **sędzia w drzwiach
+  zatrzymuje go na przepychankę** (ok. 12 s na sędziego, limit naporu 12/s). Zarządzenia i teczki Prokuratora trafiają go
+  w pełni, wniosek o immunitet raz. Żeby wszedł, trzeba najpierw oczyścić drogę: prawnicy na sędziów, dziennikarze na
+  zarządzenia, „państwo policyjne" na kordony.
+- **Sędziów jest najwyżej 4 naraz**, a po wypchnięciu jednego pozostali przegrupowują się 25 s (nie da się stawiać nowych).
+  Bez tego AI odbudowywało sędziego co 2,4 s i drzwi były nieskończoną ścianą.
+- **Prezes partii** (60, 600 HP) też powoli przeciska się przez kordon (30 % prędkości, odrzut ×0,6) i pcha sędziów (8/s).
+- Symulacje AI vs AI na tych liczbach: raz Prezydent wchodzi ok. 2:15 (10 osób pod drzwiami, 3 wieże stracone),
+  raz utyka na sędziach, a POLSKA spada do zera ok. 2:50. Obie strony mają co robić.

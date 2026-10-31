@@ -39,8 +39,8 @@ Parametry URL do testów: `?side=inside|outside` (od razu start), `?speed=3` (pr
 
 - **WEWNĄTRZ**: karta (klik lub klawisze 1–9) → klik na kafel dziedzińca. Prawy przycisk / Esc anuluje.
   Sędzia tylko przy drzwiach. Wniosek o immunitet: wybierz kartę, kliknij bossa (raz na osobę).
-  Kordon policji i Oddział prewencji nasycają napór tłumu (więcej rąk nie znaczy szybciej) i regenerują się,
-  gdy nikt nie napiera. Zwykły tłum nie wchodzi do budynku: dobija się do drzwi i zostaje wyprowadzony
+  Kordon odpycha jednego mocno, a tłum słabo (odrzut dzieli się między napierających) i regeneruje się,
+  gdy nikt nie napiera; sędziów jest najwyżej 4, po wypchnięciu jednego reszta przegrupowuje się 25 s. Zwykły tłum nie wchodzi do budynku: dobija się do drzwi i zostaje wyprowadzony
   (licznik „pod drzwiami"). Do środka przechodzi tylko Prezydent.
 - **NA ZEWNĄTRZ**: kliknij romb punktu wejścia na ulicy, potem kartę (1–8) — jednostka rusza od razu.
 - `R` pokazuje/ukrywa zasięgi.

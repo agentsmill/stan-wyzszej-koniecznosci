@@ -94,6 +94,9 @@ const STR = {
   'end.polskaZero': { pl: 'POLSKA: 0', en: 'POLAND: 0' },
   'spawn.east': { pl: 'wschód', en: 'east' }, 'spawn.west': { pl: 'zachód', en: 'west' }, 'spawn.south': { pl: 'południe', en: 'south' },
   'loading': { pl: 'Ładowanie assetów…', en: 'Loading assets…' },
+  'hint.judgeMax': { pl: 'Więcej sędziów nie ma (max {n} naraz).', en: 'No more judges available (max {n} at once).' },
+  'hint.judgeCooldown': { pl: 'Sędziowie się przegrupowują ({s} s).', en: 'The judges are regrouping ({s} s).' },
+  'log.judgeRegroup': { pl: 'Sędzia wypchnięty. Pozostali przegrupowują się przez 25 s.', en: 'A judge was pushed out. The others regroup for 25 s.' },
 };
 
 /* Teksty w HTML (data-i18n="klucz"; data-i18n-html="klucz" dla HTML) */

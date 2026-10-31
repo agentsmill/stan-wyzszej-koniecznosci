@@ -58,26 +58,26 @@ const SIDES = {
 /* ---------- WIEŻE (strona wewnątrz) ---------- */
 const TOWERS = {
   barrier: {
-    name: B('Barierka', 'Barrier'), cost: 10, polska: 0.5, hp: 180, kind: 'block', pushCap: 6,
-    desc: B('Tania przeszkoda. Tłum przewraca ją powoli.', 'Cheap obstacle. The crowd topples it slowly.'),
+    name: B('Barierka', 'Barrier'), cost: 10, polska: 0.5, hp: 80, kind: 'block', pushCap: 14,
+    desc: B('Tania przeszkoda. Kilku ludzi przewraca ją w parę sekund.', 'Cheap obstacle. A few people topple it in seconds.'),
     sprite: 'barrier',
   },
   cordon: {
-    name: B('Kordon policji', 'Police cordon'), cost: 25, polska: 1, hp: 320, kind: 'block',
-    push: 10, range: 1.1, pushCap: 10, regen: 5,
-    desc: B('Blokuje kafel, odpycha. Napór tłumu się nasyca, kordon się przegrupowuje.', 'Blocks a tile, pushes back. Crowd pressure saturates; the cordon regroups.'),
+    name: B('Kordon policji', 'Police cordon'), cost: 25, polska: 1, hp: 240, kind: 'block',
+    push: 10, range: 1.1, pushCap: 18, regen: 3,
+    desc: B('Blokuje kafel. Odpycha jednego mocno, tłum słabo. Przegrupowuje się, gdy nikt nie napiera.', 'Blocks a tile. Pushes one person hard, a crowd weakly. Regroups when nobody pushes.'),
     sprite: 'police',
   },
   riot: {
-    name: B('Oddział prewencji', 'Riot squad'), cost: 45, polska: 2, hp: 600, kind: 'block',
-    push: 14, range: 1.4, pushCap: 12, regen: 8, squad: true,
+    name: B('Oddział prewencji', 'Riot squad'), cost: 45, polska: 2, hp: 440, kind: 'block',
+    push: 16, range: 1.4, pushCap: 20, regen: 4, squad: true,
     desc: B('Dwa szeregi, tarcze. Trzyma linię godzinami.', 'Two ranks, shields. Holds the line for hours.'),
     sprite: 'police',
   },
   judge: {
-    name: B('Sędzia w drzwiach', 'Judge in the doorway'), cost: 35, polska: 0.8, hp: 160, kind: 'aura', pushCap: 8,
-    range: 2.6, slow: 0.5, nearDoor: 2,
-    desc: B('Aura legitymacji spowalnia. Tylko przy drzwiach.', 'An aura of legitimacy slows the crowd. Doors only.'),
+    name: B('Sędzia w drzwiach', 'Judge in the doorway'), cost: 35, polska: 0.8, hp: 140, kind: 'aura', pushCap: 12,
+    range: 2.6, slow: 0.5, nearDoor: 2, maxAlive: 4, rebuildCooldown: 25,
+    desc: B('Spowalnia tłum, zatrzymuje Prezydenta na przepychankę. Max 4, tylko przy drzwiach.', 'Slows the crowd, holds the President in a scuffle. Max 4, doors only.'),
     sprite: 'judge',
   },
   decree: {
@@ -124,12 +124,12 @@ const INSIDE_BOSSES = {
 /* ---------- JEDNOSTKI NA ZEWNĄTRZ ---------- */
 const UNITS = {
   protester: {
-    name: B('Protestujący', 'Protester'), cost: 8, polska: 0.3, hp: 40, speed: 2.2, push: 3,
+    name: B('Protestujący', 'Protester'), cost: 8, polska: 0.3, hp: 48, speed: 2.2, push: 4,
     desc: B('Flaga, determinacja, niewiele więcej.', 'A flag, determination, not much else.'),
     sprites: ['protester', 'kibic', 'dresiarz'],
   },
   unionist: {
-    name: B('Związkowiec', 'Union member'), cost: 15, polska: 0.5, hp: 120, speed: 1.4, push: 7,
+    name: B('Związkowiec', 'Union member'), cost: 15, polska: 0.5, hp: 130, speed: 1.4, push: 9,
     desc: B('Wolny, twardy. Piotr Duda wezwał.', 'Slow, tough. Piotr Duda called them in.'),
     sprites: ['unionist'],
   },
@@ -141,7 +141,7 @@ const UNITS = {
   },
   lawyer: {
     name: B('Prawnik z teczką', 'Lawyer with a briefcase'), cost: 20, polska: 0.4, hp: 60, speed: 2.0, push: 2,
-    immuneDecree: true, argue: 8,
+    immuneDecree: true, argue: 10,
     desc: B('Odporny na zarządzenia. Argumentuje z sędziami.', 'Immune to decrees. Argues with the judges.'),
     sprites: ['lawyer'],
   },
@@ -162,15 +162,15 @@ const OUTSIDE_BOSSES = {
     sprites: ['tkpresident'], quote: B('„To uzurpacja."', '"This is usurpation."'),
   },
   chairman: {
-    name: B('Prezes partii', 'Party chairman'), cost: 50, polska: 8, hp: 450, speed: 1.1, push: 3,
-    policeState: 15, duration: 45,
-    desc: B('„Państwo policyjne": kordony ×2 obrażeń przez 15 s.', '"Police state": cordons take ×2 damage for 15 s.'),
+    name: B('Prezes partii', 'Party chairman'), cost: 60, polska: 8, hp: 600, speed: 1.1, push: 3,
+    policeState: 15, duration: 60, ghost: true, ghostSlow: 0.3, pushResist: 0.6, pushJudges: true, push: 8,
+    desc: B('„Państwo policyjne": kordony ×2 obrażeń przez 15 s. Sam powoli przeciska się przez kordon.', '"Police state": cordons take ×2 damage for 15 s. He himself slowly squeezes through the cordon.'),
     sprites: ['chairman'], quote: B('„Od dzisiaj Polska staje się państwem policyjnym."', '"From today Poland becomes a police state."'),
   },
   president: {
-    name: B('Prezydent', 'The President'), cost: 100, polska: 15, hp: 1400, speed: 1.6, push: 0,
-    unlockMin: 55, ghost: true, ghostSlow: 0.45, targetDoor: 'side', immuneStun: true, pushResist: 0.25,
-    desc: B('Jedyny, kto przechodzi przez kordon. Da się go tylko spowolnić. Celuje w boczne wejście.', 'The only one who walks through the cordon. Can only be slowed. Heads for the side entrance.'),
+    name: B('Prezydent', 'The President'), cost: 120, polska: 15, hp: 900, speed: 1.6, push: 20, pushJudges: true,
+    unlockMin: 55, ghost: true, ghostSlow: 0.4, targetDoor: 'side', immuneStun: true, pushResist: 0.6,
+    desc: B('Policja go przepuszcza, ale sędziowie w drzwiach zatrzymują na przepychankę. Najpierw oczyść mu drogę.', 'The police let him through, but judges in the doorway hold him in a scuffle. Clear his path first.'),
     sprites: ['president'], quote: B('„Nie jesteście sędziami."', '"You are not judges."'),
   },
 };

@@ -112,13 +112,13 @@ class Unit {
       if (!this.next) { this.anim = 'idle'; return; }
     }
     const tw = MAP.tower(this.next.gx, this.next.gy);
-    if (tw && !this.ghost) {
+    if (tw && (!this.ghost || (def.pushJudges && tw.key === 'judge'))) { // duch przechodzi przez policję, ale sędziowie w drzwiach go zatrzymują
       // napieranie na wieżę
       this.state = 'push'; this.anim = 'idle'; this.pushTarget = tw;
       this.dir = ISO.dirFromDelta(this.next.gx - this.gx, this.next.gy - this.gy);
       let p = (def.push || 0) * dt * game.pushMult();
       if (def.argue && tw.key === 'judge') p = def.argue * dt;
-      if (tw.key === 'judge' && !def.argue) p *= 0.4; // sędziego tłum raczej nie przewraca
+      if (tw.key === 'judge' && !def.argue && !def.pushJudges) p *= 0.4; // sędziego tłum raczej nie przewraca
       tw.damage(p, game, this);
       game.clash += dt;
       return;
@@ -216,7 +216,8 @@ class Tower {
     if (near) this.dir = ISO.dirFromDelta(near.gx - this.gx, near.gy - this.gy);
     else this.dir = 'south';
     if (def.kind === 'block' && def.push) {
-      for (const u of game.attackersInRange(this, def.range)) { u.damage(def.push * mult * dt * (u.def.pushResist || 1), game, this); }
+      const us = game.attackersInRange(this, def.range); const per = def.push * mult / Math.max(1, us.length); // odrzut dzieli się między napierających
+      for (const u of us) u.damage(per * dt * (u.def.pushResist || 1), game, this);
     } else if (def.kind === 'aura') {
       for (const u of game.attackersInRange(this, def.range)) u.slow = Math.min(u.slow, def.slow);
     } else if (def.kind === 'shoot') {
