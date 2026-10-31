@@ -35,7 +35,7 @@ async function take(browser, name, fn) {
   });
 
   await take(browser, 'f2_outside', async (page, mark) => {
-    await page.goto(BASE + '?side=outside'); await ready(page); mark('start');
+    await page.goto(BASE + '?side=outside'); await ready(page); await page.addStyleTag({ content: '#log{display:none !important}' }); mark('start');
     await page.evaluate(() => { GAME.speed = 2.5; GAME.money.outside = 1800; GAME.money.inside = 320; });
     await sleep(600);
     await spawnMany(page, [['protester', 1], ['protester', 0], ['protester', 2], ['unionist', 1], ['protester', 1], ['mp', 1], ['protester', 0], ['protester', 2], ['unionist', 0], ['protester', 1], ['journalist', 1], ['protester', 2], ['protester', 1], ['lawyer', 0], ['protester', 1], ['unionist', 2], ['protester', 0], ['protester', 1]], 80);

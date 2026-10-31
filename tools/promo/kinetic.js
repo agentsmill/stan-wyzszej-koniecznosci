@@ -13,7 +13,7 @@ const words = {
   w_akta: ['50 TOMÓW AKT.', 'purple small'], w_przerwa: ['PRZERWA W CZYNNOŚCIACH.', 'purple small'], w_tlum: ['TŁUM.', 'red'],
   w_ciecie: ['CIĘCIE.', 'red'], w_policyjne: ['„PAŃSTWO POLICYJNE".', 'red small'], w_polska: ['POLSKA −15', 'yellow big'],
   w_prezydent: ['PREZYDENT.', 'red big'], w_sedziami: ['„NIE JESTEŚCIE SĘDZIAMI."', 'red small'], w_boczne: ['BOCZNE WEJŚCIE.', 'red small bottom'],
-  w_zawsze: ['ZAWSZE.', 'yellow big'], w_kto: ['KTO WYGRAŁ?', 'yellow'],
+  w_zawsze: ['ZAWSZE.', 'yellow big bottom'], w_kto: ['KTO WYGRAŁ?', 'yellow'],
 };
 (async () => {
   const browser = await chromium.launch({ channel: 'chrome', headless: true });
