@@ -27,12 +27,12 @@ class Unit {
   say(text, sec = 2.5) { this.bubble = text; this.bubbleT = sec; }
   damage(n, game, src) {
     if (this.dead) return; this.hp -= n; this.flash = 0.15;
-    if (this.role === 'citizen') { this.giveUp(game, 'trafiony'); return; }
+    if (this.role === 'citizen') { this.giveUp(game, 'hit'); return; }
     if (this.hp <= 0) { this.dead = true; game.onUnitDied(this, src); }
   }
   giveUp(game, why) {
     if (this.state === 'leaving' || this.dead) return;
-    this.state = 'leaving'; this.anim = 'walk'; this.life = 0; this.say('rezygnuję…', 2);
+    this.state = 'leaving'; this.anim = 'walk'; this.life = 0; this.say(T('say.leaving'), 2);
     game.onCitizenLost(this, why);
   }
 
@@ -47,7 +47,7 @@ class Unit {
     }
     if (this.frozenUntil > now && !this.def.immuneStun) { this.anim = null; return; }
     if (this.stunUntil > now && !this.def.immuneStun) { this.anim = null; return; }
-    if (this.isBoss && this.bossTimer > 0) { this.bossTimer -= dt; if (this.bossTimer <= 0) { this.state = 'leaving'; game.log(`${this.name} schodzi ze sceny.`); return; } }
+    if (this.isBoss && this.bossTimer > 0) { this.bossTimer -= dt; if (this.bossTimer <= 0) { this.state = 'leaving'; game.log(T('log.bossLeaves', { name: this.name })); return; } }
 
     if (this.role === 'insideBoss') return this.updateInsideBoss(dt, game);
     if (this.role === 'citizen') return this.updateCitizen(dt, game);
@@ -125,7 +125,7 @@ class Unit {
     }
     // ruch
     let spd = this.speed * this.slow * (game.premierActive ? INSIDE_BOSSES.premier.enemySlow : 1) * game.auraSpeedAt(this);
-    if (this.ghost && (tw || MAP.tower(c.gx, c.gy))) { spd *= def.ghostSlow; if (Math.random() < dt * 1.5) game.spark(this, 'przepychanka'); game.clash += dt; }
+    if (this.ghost && (tw || MAP.tower(c.gx, c.gy))) { spd *= def.ghostSlow; if (Math.random() < dt * 1.5) game.spark(this, T('say.scuffle')); game.clash += dt; }
     this.state = 'move'; this.pushTarget = null;
     if (this.moveToward(this.next.gx, this.next.gy, dt, spd)) { this.gx = this.next.gx; this.gy = this.next.gy; this.next = null; }
     this.slow = 1;
@@ -137,11 +137,11 @@ class Unit {
     if (ISO.dist(this, door) < 0.25) { game.onCitizenFiled(this); this.dead = true; return; }
     const d = field[c.gy]?.[c.gx];
     const blocked = d === undefined || d >= 1e9;
-    if (blocked) { this.patience += dt; this.anim = 'idle'; if (this.patience > CFG.CITIZEN_PATIENCE) this.giveUp(game, 'zablokowany'); return; }
+    if (blocked) { this.patience += dt; this.anim = 'idle'; if (this.patience > CFG.CITIZEN_PATIENCE) this.giveUp(game, 'blocked'); return; }
     this.patience = Math.max(0, this.patience - dt * 0.5);
     if (!this.next || this.atCenter()) { this.next = MAP.nextStep(field, c.gx, c.gy); if (!this.next) { this.anim = 'idle'; return; } }
     // tłum na kaflu? obywatel się boi
-    if (game.crowdAt(this.next.gx, this.next.gy) >= 3) { this.patience += dt * 1.5; this.anim = 'idle'; if (this.patience > CFG.CITIZEN_PATIENCE) this.giveUp(game, 'tłum'); return; }
+    if (game.crowdAt(this.next.gx, this.next.gy) >= 3) { this.patience += dt * 1.5; this.anim = 'idle'; if (this.patience > CFG.CITIZEN_PATIENCE) this.giveUp(game, 'crowd'); return; }
     if (this.moveToward(this.next.gx, this.next.gy, dt, 1.3)) { this.gx = this.next.gx; this.gy = this.next.gy; this.next = null; }
   }
 
@@ -222,7 +222,7 @@ class Tower {
     } else if (def.kind === 'shoot') {
       if (this.cd <= 0) { const tgt = game.nearestAttacker(this, def.range, u => !u.def.immuneDecree); if (tgt) { game.throwProjectile(this, tgt, def.dmg * mult, '§'); this.cd = def.cooldown; } }
     } else if (def.kind === 'stun') {
-      if (this.cd <= 0) { const us = game.attackersInRange(this, def.range); if (us.length) { for (const u of us) u.stunUntil = Math.max(u.stunUntil, game.time + def.stun); for (const c of game.citizensInRange(this, def.range)) c.giveUp(game, 'hałas'); game.tweetWave(this); this.cd = def.cooldown; } }
+      if (this.cd <= 0) { const us = game.attackersInRange(this, def.range); if (us.length) { for (const u of us) u.stunUntil = Math.max(u.stunUntil, game.time + def.stun); for (const c of game.citizensInRange(this, def.range)) c.giveUp(game, 'noise'); game.tweetWave(this); this.cd = def.cooldown; } }
     }
   }
   draw(ctx, game) {

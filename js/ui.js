@@ -14,7 +14,7 @@ const UI = {
     this.el.logbtn.addEventListener('click', () => document.body.classList.toggle('showlog'));
     this.el.cancelbtn.addEventListener('click', () => game.cancelSelection());
     const n = +localStorage.getItem('swk_losses') || 0;
-    this.el['loss-count'].textContent = n ? `Polska przegrała na tym komputerze już ${n} ${n === 1 ? 'raz' : 'razy'}.` : '';
+    this.el['loss-count'].textContent = n ? T('ui.lossCount', { n, times: T(n === 1 ? 'ui.once' : 'ui.times') }) : '';
   },
   loading(pct) { this.el['loading-pct'].textContent = Math.round(pct * 100) + '%'; },
   showMenu() { this.el.loading.classList.add('hidden'); this.el.menu.classList.remove('hidden'); this.el.hud.classList.add('hidden'); this.el.ending.classList.add('hidden'); },
@@ -43,8 +43,8 @@ const UI = {
   update(game) {
     const m = Math.floor(game.gameMin); this.el.clock.textContent = `${String(Math.floor(m / 60)).padStart(2, '0')}:${String(m % 60).padStart(2, '0')}`;
     const p = Math.max(0, game.polska); this.el['polska-fill'].style.width = p + '%'; this.el['polska-fill'].style.backgroundPosition = `${100 - p}% 0`; this.el['polska-val'].textContent = Math.ceil(p);
-    this.el['resource-val'].textContent = game.mobile ? `${Math.floor(game.money[game.side])} · drzwi ${game.breaches}/${CFG.OUTSIDE_WIN_BREACHES}` : Math.floor(game.money[game.side]);
-    this.el['side-slogan'].textContent = `${SIDES[game.side].slogan}  ·  pod drzwiami: ${game.breaches}/${CFG.OUTSIDE_WIN_BREACHES}`;
+    this.el['resource-val'].textContent = game.mobile ? `${Math.floor(game.money[game.side])} · ${T('ui.doors')} ${game.breaches}/${CFG.OUTSIDE_WIN_BREACHES}` : Math.floor(game.money[game.side]);
+    this.el['side-slogan'].textContent = `${SIDES[game.side].slogan}  ·  ${T('ui.atDoors')}: ${game.breaches}/${CFG.OUTSIDE_WIN_BREACHES}`;
     const money = game.money[game.side];
     for (const c of this.cards) {
       let off = money < c.def.cost;
@@ -66,7 +66,7 @@ const UI = {
     this.el.hud.classList.add('hidden'); this.el.ending.classList.remove('hidden');
     const V = this.el['ending-victory'], L = this.el['ending-loss'];
     L.classList.add('hidden'); V.classList.remove('hidden'); V.className = winner || '';
-    V.innerHTML = winner ? SIDES[winner].victoryText : '<small>POLSKA: 0</small>';
+    V.innerHTML = winner ? SIDES[winner].victoryText : `<small>${T('end.polskaZero')}</small>`;
     const n = (+localStorage.getItem('swk_losses') || 0) + 1; localStorage.setItem('swk_losses', n);
     setTimeout(() => {
       document.getElementById('stage').classList.add('glitch');
@@ -74,17 +74,17 @@ const UI = {
       V.classList.add('hidden'); L.classList.remove('hidden');
       const s = game.stats;
       const rows = [
-        ['Strona, która „wygrała"', winner ? SIDES[winner].name : 'nikt — licznik POLSKA spadł do zera'],
-        ['Godzina zakończenia', this.el.clock.textContent],
-        ['Wieże postawione / jednostki wysłane', `${s.towers} / ${s.units}`],
-        ['Ludzie, którzy dotarli pod drzwi', `${s.breaches}`],
-        ['Bossowie wezwani', `${s.bosses}`],
-        ['Obywatele, którzy nie złożyli skargi', `${s.citizensLost}`],
-        ...ENDING_FACTS.map(([k, f]) => [k, f(s)]),
-        ['Polska przegrała na tym komputerze', `${n} ${n === 1 ? 'raz' : 'razy'}`],
+        [T('end.winner'), winner ? SIDES[winner].name : T('end.nobody')],
+        [T('end.time'), this.el.clock.textContent],
+        [T('end.towersUnits'), `${s.towers} / ${s.units}`],
+        [T('end.atDoors'), `${s.breaches}`],
+        [T('end.bosses'), `${s.bosses}`],
+        [T('end.citizens'), `${s.citizensLost}`],
+        ...ENDING_FACTS.map(([k, v]) => [k, String(v).replace('{n}', s.citizensLost)]),
+        [T('end.lossCount'), `${n} ${T(n === 1 ? 'ui.once' : 'ui.times')}`],
       ];
       this.el['ending-stats'].innerHTML = rows.map(([k, v]) => `<div class="row"><span>${k}</span><b>${v}</b></div>`).join('');
-      this.el['loss-count'].textContent = `Polska przegrała na tym komputerze już ${n} ${n === 1 ? 'raz' : 'razy'}.`;
+      this.el['loss-count'].textContent = T('ui.lossCount', { n, times: T(n === 1 ? 'ui.once' : 'ui.times') });
     }, winner ? 1800 : 900);
   },
 };

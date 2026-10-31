@@ -68,6 +68,10 @@ h1 { font-family: 'Press Start 2P', monospace; font-size: 34px; line-height: 1.5
 .side-btn:hover { background: #16193a; transform: translateY(-2px); }
 .fine { font-size: 18px; opacity: .65; line-height: 1.2; }
 #loading-pct { font-family: 'Press Start 2P', monospace; }
+#langbar { display: flex; gap: 8px; justify-content: center; margin-bottom: 14px; }
+#langbar button { font-family: 'Press Start 2P', monospace; font-size: 11px; padding: 8px 12px; background: #0c0e22; color: #777; border: 2px solid #333; cursor: pointer; }
+#langbar button.on { color: #fff; border-color: #fff; }
+#langbar button:hover { color: #fff; }
 
 /* ENDING */
 #ending { flex-direction: column; }

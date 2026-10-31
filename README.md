@@ -4,6 +4,19 @@ Cyfrowy performans o nocy z 30 na 31 października 2026 r. w Trybunale Konstytuc
 Tower defense, w którym można grać obiema stronami. Niezależnie od tego, kto „wygra", ekran końcowy
 jest zawsze ten sam: **PRZEGRANA: POLSKA**.
 
+## English
+
+The game is bilingual. The language follows the browser, the PL / EN switch in the menu overrides it,
+and `?lang=en` / `?lang=pl` force it. Everything is translated: cards, the night's timeline ticker,
+the event log, hints and the ending screen. Texts live in `js/i18n.js` (code strings) and `js/config.js`
+(data: `B('polski', 'English')` pairs flattened at load time).
+
+**What it is:** a pixel-art tower defense about the night of 30/31 October 2026 at Poland's Constitutional
+Tribunal. Pick a side: INSIDE holds the doors with police cordons, judges and decrees; OUTSIDE sends the
+crowd, an MP with bolt cutters and, at 0:58, the President, the only one who walks through the cordon.
+A third counter, POLAND, drains from both sides' moves. Whoever wins, the ending screen is the same:
+DEFEAT: POLAND.
+
 ## Graj online
 
 https://agentsmill.github.io/stan-wyzszej-koniecznosci/ (GitHub Pages z gałęzi `main`).

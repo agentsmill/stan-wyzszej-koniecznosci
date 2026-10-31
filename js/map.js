@@ -18,9 +18,9 @@ const MAP = {
   courtyard: (gx, gy) => gx >= 6 && gx <= 18 && gy >= 0 && gy <= 10,
 
   build() {
-    const T = [], S = [], TW = [];
+    const TER = [], S = [], TW = [];
     for (let gy = 0; gy < ISO.ROWS; gy++) {
-      T.push([]); S.push([]); TW.push([]);
+      TER.push([]); S.push([]); TW.push([]);
       for (let gx = 0; gx < ISO.COLS; gx++) {
         let t = 'G';
         if (gx >= 2 && gx <= 4) t = 'A';                   // ulica zachodnia
@@ -39,12 +39,12 @@ const MAP = {
         if (gx >= 10 && gx <= 15 && gy >= 2 && gy <= 4) t = 'B'; // gmach TK (6×3)
         if (gy === 5 && gx >= 10 && gx <= 13) t = 'M';     // schody portyku
         if (gx === 16 && gy >= 3 && gy <= 4) t = 'M';      // przy bocznym wejściu
-        T[gy].push(t);
+        TER[gy].push(t);
         S[gy].push(t === 'B' || t === 'H');
         TW[gy].push(null);
       }
     }
-    this.terrain = T; this.solid = S; this.towerAt = TW;
+    this.terrain = TER; this.solid = S; this.towerAt = TW;
 
     // ogrodzenie: wzdłuż gy=10 (gx 6..18) i gx=6 (gy 1..10); narożniki
     this.fenceCells = [];
@@ -64,12 +64,12 @@ const MAP = {
     this.doors = { main: { gx: 13, gy: 5 }, side: { gx: 16, gy: 3 } };
     this.balcony = { gx: 12, gy: 4.6, dy: -74 };
     this.spawns = [
-      { gx: 19, gy: 13, name: 'wschód' },
-      { gx: 0,  gy: 13, name: 'zachód' },
-      { gx: 3,  gy: 19, name: 'południe' },
+      { gx: 19, gy: 13, name: T('spawn.east') },
+      { gx: 0,  gy: 13, name: T('spawn.west') },
+      { gx: 3,  gy: 19, name: T('spawn.south') },
     ];
     // ulica zachodnia kończy się na gy=15; wydłuż do krawędzi
-    for (let gy = 16; gy < ISO.ROWS; gy++) { for (let gx = 2; gx <= 4; gx++) T[gy][gx] = 'A'; T[gy][1] = 'S'; T[gy][5] = 'S'; }
+    for (let gy = 16; gy < ISO.ROWS; gy++) { for (let gx = 2; gx <= 4; gx++) TER[gy][gx] = 'A'; TER[gy][1] = 'S'; TER[gy][5] = 'S'; }
     this.citizenSpawn = { gx: 0, gy: 11 };
 
     // dekoracje
