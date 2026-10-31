@@ -1,0 +1,94 @@
+{
+ "cell": {
+  "width": 48,
+  "height": 48
+ },
+ "columns": 8,
+ "rows": [
+  {
+   "row": 0,
+   "type": "rotations",
+   "frame_count": 8,
+   "directions": [
+    "south",
+    "south-east",
+    "east",
+    "north-east",
+    "north",
+    "north-west",
+    "west",
+    "south-west"
+   ]
+  },
+  {
+   "row": 1,
+   "type": "animation",
+   "frame_count": 4,
+   "animation": "chod",
+   "direction": "south"
+  },
+  {
+   "row": 2,
+   "type": "animation",
+   "frame_count": 4,
+   "animation": "chod",
+   "direction": "east"
+  },
+  {
+   "row": 3,
+   "type": "animation",
+   "frame_count": 4,
+   "animation": "chod",
+   "direction": "north"
+  },
+  {
+   "row": 4,
+   "type": "animation",
+   "frame_count": 4,
+   "animation": "chod",
+   "direction": "west"
+  },
+  {
+   "row": 5,
+   "type": "animation",
+   "frame_count": 4,
+   "animation": "walk",
+   "direction": "south-east"
+  },
+  {
+   "row": 6,
+   "type": "animation",
+   "frame_count": 4,
+   "animation": "walk",
+   "direction": "north-east"
+  },
+  {
+   "row": 7,
+   "type": "animation",
+   "frame_count": 4,
+   "animation": "stanie",
+   "direction": "south"
+  },
+  {
+   "row": 8,
+   "type": "animation",
+   "frame_count": 4,
+   "animation": "stanie",
+   "direction": "east"
+  },
+  {
+   "row": 9,
+   "type": "animation",
+   "frame_count": 4,
+   "animation": "stanie",
+   "direction": "north"
+  },
+  {
+   "row": 10,
+   "type": "animation",
+   "frame_count": 4,
+   "animation": "stanie",
+   "direction": "west"
+  }
+ ]
+}

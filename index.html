@@ -1,0 +1,86 @@
+<!doctype html>
+<html lang="pl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Stan wyższej konieczności</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=VT323&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+<div id="stage">
+  <canvas id="game" width="1280" height="768"></canvas>
+
+  <!-- HUD -->
+  <div id="hud" class="hidden">
+    <div id="topbar">
+      <div id="side-box">
+        <div id="side-name">—</div>
+        <div id="side-slogan">—</div>
+      </div>
+      <div id="clock-box">
+        <div id="clock">00:30</div>
+        <div id="ticker">…</div>
+      </div>
+      <div id="polska-box">
+        <div class="label">POLSKA</div>
+        <div id="polska-bar"><div id="polska-fill"></div><div id="polska-val">100</div></div>
+        <div id="resource"><span id="resource-name">Legitymacja</span>: <b id="resource-val">0</b></div>
+      </div>
+    </div>
+    <div id="log"></div>
+    <div id="cards"></div>
+    <div id="hint"></div>
+  </div>
+
+  <!-- MENU -->
+  <div id="menu" class="overlay">
+    <div class="menu-inner">
+      <h1>STAN WYŻSZEJ<br>KONIECZNOŚCI</h1>
+      <p class="sub">cyfrowy performans o nocy z 30 na 31 października 2026 w Trybunale Konstytucyjnym</p>
+      <p class="choose">Wybierz, kogo bronisz:</p>
+      <div class="sides">
+        <button class="side-btn inside" data-side="inside">
+          <span class="side-title">WEWNĄTRZ</span>
+          <span class="side-desc">„Przywracamy praworządność"<br>Trzymasz drzwi Trybunału. Kordony, sędziowie, zarządzenia.</span>
+        </button>
+        <button class="side-btn outside" data-side="outside">
+          <span class="side-title">NA ZEWNĄTRZ</span>
+          <span class="side-desc">„Bronimy porządku konstytucyjnego"<br>Wysyłasz ludzi pod drzwi. Protest, posłowie, Prezydent.</span>
+        </button>
+      </div>
+      <p class="fine">Obie strony twierdzą, że bronią Trybunału. Gra nie rozstrzyga, kto ma rację.<br>
+      Na dole ekranu zawsze jest trzeci licznik. Patrz na niego.</p>
+      <p class="fine" id="loss-count"></p>
+    </div>
+  </div>
+
+  <!-- LOADING -->
+  <div id="loading" class="overlay"><div class="menu-inner"><p class="sub">Ładowanie assetów…</p><p id="loading-pct">0%</p></div></div>
+
+  <!-- ENDING -->
+  <div id="ending" class="overlay hidden">
+    <div id="ending-victory"></div>
+    <div id="ending-loss" class="hidden">
+      <h1>PRZEGRANA: POLSKA</h1>
+      <div id="ending-stats"></div>
+      <div class="ending-btns">
+        <button id="btn-other">Zagraj drugą stroną</button>
+        <button id="btn-again">Od nowa</button>
+      </div>
+      <p class="fine">Każda noc w Trybunale kończy się tak samo, niezależnie od tego, kto wygrał.</p>
+    </div>
+  </div>
+</div>
+
+<script src="js/config.js"></script>
+<script src="js/iso.js"></script>
+<script src="js/assets.js"></script>
+<script src="js/map.js"></script>
+<script src="js/entities.js"></script>
+<script src="js/ai.js"></script>
+<script src="js/ui.js"></script>
+<script src="js/game.js"></script>
+</body>
+</html>

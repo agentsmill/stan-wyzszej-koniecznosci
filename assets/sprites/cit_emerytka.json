@@ -1,0 +1,381 @@
+{
+ "cell": {
+  "width": 68,
+  "height": 68
+ },
+ "columns": 8,
+ "rows": [
+  {
+   "row": 0,
+   "type": "rotations",
+   "frame_count": 8,
+   "directions": [
+    "south",
+    "south-east",
+    "east",
+    "north-east",
+    "north",
+    "north-west",
+    "west",
+    "south-west"
+   ]
+  },
+  {
+   "row": 1,
+   "type": "animation",
+   "frame_count": 4,
+   "animation": "mlotek-px",
+   "direction": "south"
+  },
+  {
+   "row": 2,
+   "type": "animation",
+   "frame_count": 4,
+   "animation": "mlotek-px",
+   "direction": "north"
+  },
+  {
+   "row": 3,
+   "type": "animation",
+   "frame_count": 4,
+   "animation": "mlotek-px",
+   "direction": "west"
+  },
+  {
+   "row": 4,
+   "type": "animation",
+   "frame_count": 4,
+   "animation": "deski-px",
+   "direction": "south"
+  },
+  {
+   "row": 5,
+   "type": "animation",
+   "frame_count": 4,
+   "animation": "deski-px",
+   "direction": "north"
+  },
+  {
+   "row": 6,
+   "type": "animation",
+   "frame_count": 4,
+   "animation": "deski-px",
+   "direction": "west"
+  },
+  {
+   "row": 7,
+   "type": "animation",
+   "frame_count": 4,
+   "animation": "chod",
+   "direction": "south"
+  },
+  {
+   "row": 8,
+   "type": "animation",
+   "frame_count": 4,
+   "animation": "chod",
+   "direction": "east"
+  },
+  {
+   "row": 9,
+   "type": "animation",
+   "frame_count": 4,
+   "animation": "chod",
+   "direction": "north"
+  },
+  {
+   "row": 10,
+   "type": "animation",
+   "frame_count": 4,
+   "animation": "chod",
+   "direction": "west"
+  },
+  {
+   "row": 11,
+   "type": "animation",
+   "frame_count": 5,
+   "animation": "wstawanie",
+   "direction": "west"
+  },
+  {
+   "row": 12,
+   "type": "animation",
+   "frame_count": 4,
+   "animation": "stanie",
+   "direction": "south"
+  },
+  {
+   "row": 13,
+   "type": "animation",
+   "frame_count": 4,
+   "animation": "stanie",
+   "direction": "east"
+  },
+  {
+   "row": 14,
+   "type": "animation",
+   "frame_count": 4,
+   "animation": "stanie",
+   "direction": "north"
+  },
+  {
+   "row": 15,
+   "type": "animation",
+   "frame_count": 4,
+   "animation": "stanie",
+   "direction": "west"
+  },
+  {
+   "row": 16,
+   "type": "animation",
+   "frame_count": 4,
+   "animation": "warta-px",
+   "direction": "south"
+  },
+  {
+   "row": 17,
+   "type": "animation",
+   "frame_count": 4,
+   "animation": "warta-px",
+   "direction": "north"
+  },
+  {
+   "row": 18,
+   "type": "animation",
+   "frame_count": 4,
+   "animation": "warta-px",
+   "direction": "west"
+  },
+  {
+   "row": 19,
+   "type": "animation",
+   "frame_count": 4,
+   "animation": "gotowanie-px",
+   "direction": "south"
+  },
+  {
+   "row": 20,
+   "type": "animation",
+   "frame_count": 4,
+   "animation": "gotowanie-px",
+   "direction": "north"
+  },
+  {
+   "row": 21,
+   "type": "animation",
+   "frame_count": 4,
+   "animation": "gotowanie-px",
+   "direction": "west"
+  },
+  {
+   "row": 22,
+   "type": "animation",
+   "frame_count": 4,
+   "animation": "walk",
+   "direction": "south-east"
+  },
+  {
+   "row": 23,
+   "type": "animation",
+   "frame_count": 4,
+   "animation": "walk",
+   "direction": "north-east"
+  },
+  {
+   "row": 24,
+   "type": "animation",
+   "frame_count": 4,
+   "animation": "niesienie-px",
+   "direction": "south"
+  },
+  {
+   "row": 25,
+   "type": "animation",
+   "frame_count": 4,
+   "animation": "niesienie-px",
+   "direction": "north"
+  },
+  {
+   "row": 26,
+   "type": "animation",
+   "frame_count": 4,
+   "animation": "niesienie-px",
+   "direction": "west"
+  },
+  {
+   "row": 27,
+   "type": "animation",
+   "frame_count": 4,
+   "animation": "celowanie-px",
+   "direction": "south"
+  },
+  {
+   "row": 28,
+   "type": "animation",
+   "frame_count": 4,
+   "animation": "celowanie-px",
+   "direction": "north"
+  },
+  {
+   "row": 29,
+   "type": "animation",
+   "frame_count": 4,
+   "animation": "celowanie-px",
+   "direction": "west"
+  },
+  {
+   "row": 30,
+   "type": "animation",
+   "frame_count": 6,
+   "animation": "cios",
+   "direction": "south"
+  },
+  {
+   "row": 31,
+   "type": "animation",
+   "frame_count": 6,
+   "animation": "cios",
+   "direction": "north"
+  },
+  {
+   "row": 32,
+   "type": "animation",
+   "frame_count": 6,
+   "animation": "cios",
+   "direction": "west"
+  },
+  {
+   "row": 33,
+   "type": "animation",
+   "frame_count": 7,
+   "animation": "smierc",
+   "direction": "south"
+  },
+  {
+   "row": 34,
+   "type": "animation",
+   "frame_count": 7,
+   "animation": "smierc",
+   "direction": "north"
+  },
+  {
+   "row": 35,
+   "type": "animation",
+   "frame_count": 7,
+   "animation": "smierc",
+   "direction": "west"
+  },
+  {
+   "row": 36,
+   "type": "animation",
+   "frame_count": 5,
+   "animation": "klekanie",
+   "direction": "south"
+  },
+  {
+   "row": 37,
+   "type": "animation",
+   "frame_count": 5,
+   "animation": "klekanie",
+   "direction": "east"
+  },
+  {
+   "row": 38,
+   "type": "animation",
+   "frame_count": 5,
+   "animation": "klekanie",
+   "direction": "north"
+  },
+  {
+   "row": 39,
+   "type": "animation",
+   "frame_count": 5,
+   "animation": "klekanie",
+   "direction": "west"
+  },
+  {
+   "row": 40,
+   "type": "animation",
+   "frame_count": 4,
+   "animation": "zlom-px",
+   "direction": "south"
+  },
+  {
+   "row": 41,
+   "type": "animation",
+   "frame_count": 4,
+   "animation": "zlom-px",
+   "direction": "north"
+  },
+  {
+   "row": 42,
+   "type": "animation",
+   "frame_count": 4,
+   "animation": "zlom-px",
+   "direction": "west"
+  },
+  {
+   "row": 43,
+   "type": "animation",
+   "frame_count": 4,
+   "animation": "rabanie-px",
+   "direction": "south"
+  },
+  {
+   "row": 44,
+   "type": "animation",
+   "frame_count": 4,
+   "animation": "rabanie-px",
+   "direction": "north"
+  },
+  {
+   "row": 45,
+   "type": "animation",
+   "frame_count": 4,
+   "animation": "rabanie-px",
+   "direction": "west"
+  },
+  {
+   "row": 46,
+   "type": "animation",
+   "frame_count": 4,
+   "animation": "przeszukiwanie-px",
+   "direction": "south"
+  },
+  {
+   "row": 47,
+   "type": "animation",
+   "frame_count": 4,
+   "animation": "przeszukiwanie-px",
+   "direction": "north"
+  },
+  {
+   "row": 48,
+   "type": "animation",
+   "frame_count": 4,
+   "animation": "przeszukiwanie-px",
+   "direction": "west"
+  },
+  {
+   "row": 49,
+   "type": "animation",
+   "frame_count": 4,
+   "animation": "siedzenie-px",
+   "direction": "south"
+  },
+  {
+   "row": 50,
+   "type": "animation",
+   "frame_count": 4,
+   "animation": "siedzenie-px",
+   "direction": "north"
+  },
+  {
+   "row": 51,
+   "type": "animation",
+   "frame_count": 4,
+   "animation": "siedzenie-px",
+   "direction": "west"
+  }
+ ]
+}

@@ -1,0 +1,65 @@
+{
+ "characters": {
+  "protester": "81b8d2d0-3f97-4ba1-b058-9e4a31c4bf1c",
+  "kibic": "3c4dceab-48f7-4cf3-a376-254b2b2d49d9",
+  "dresiarz": "713f9006-293a-48de-b24c-50a02d4935e5",
+  "unionist": "3fe22ec0-97f4-443a-bb55-5865bcda5bf0",
+  "mp": "230e7b05-73bd-4938-9144-e90721c8990d",
+  "lawyer": "33c1f099-288b-475e-8b59-e277633c1684",
+  "journalist": "c50f2059-f490-43c4-a788-81ca1f5f23d2",
+  "president": "ecc5b6cb-126c-4983-b7e6-406b099c3014",
+  "tkpresident": "2e95da24-b287-487d-8003-03e73aef5c62",
+  "chairman": "132d3265-2ae6-4833-a5de-487e2c149dd0",
+  "police": "51a12179-0ac9-4c29-888d-d2e7810b6268",
+  "judge": "d51e6371-50f4-435d-a073-7bcb037a5a32",
+  "judge_senior": "b35407ce-1699-44d8-a32d-8b2b4d7270af",
+  "prosecutor": "0ad4120b-9bcd-4cea-9f0f-9796c2070bf0",
+  "premier": "97f6095d-9303-492b-bd1e-d6314923d95c",
+  "cit_staruszek": "75869a37-be96-4e71-94db-3f4ea8c16482",
+  "cit_emerytka": "7f52d5c0-ac95-4452-87e1-fd20dea11fc9",
+  "cit_matka": "3f6fb6ac-3f7b-4789-aebf-518e8963f7f8",
+  "cit_mloda": "f6d0b247-198c-4ecc-8a47-54333c1e6455"
+ },
+ "images": {
+  "lamp": "https://backblaze.pixellab.ai/file/pixellab-characters/objects/9bbda9d7-0245-45c5-8af7-a12fd1cf4179/2070d83f-c818-4da5-8095-391d787f47d0/rotations/unknown.png",
+  "building": "https://api.pixellab.ai/mcp/images/c8de86c5-ff8e-4d76-82f2-4d822ccf0a93/download",
+  "fence": "https://api.pixellab.ai/mcp/images/2adc16d8-fbcc-4a9a-870c-e85be620b495/download",
+  "barrier": "https://api.pixellab.ai/mcp/images/078571ec-5d72-43ce-ad84-96563f5aa637/download",
+  "policecar": "https://api.pixellab.ai/mcp/images/575bd7e9-5f57-4d25-835e-024554c02d1d/download",
+  "desk": "https://api.pixellab.ai/mcp/images/e322c83e-ef75-4b03-aee5-a8d669ece604/download",
+  "phone": "https://api.pixellab.ai/mcp/images/6a94bfbc-b5db-4292-bd48-0d97880d8260/download",
+  "tree": "https://api.pixellab.ai/mcp/images/69098238-2ce8-4890-bfae-6d962e7f9b99/download",
+  "tvvan": "https://api.pixellab.ai/mcp/images/9f094075-927d-48ab-a669-6ff473c6008a/download",
+  "building_alt": "https://api.pixellab.ai/mcp/images/030fa59d-9d7b-4675-9ca7-9aaae70b4a1f/download"
+ },
+ "tiles": {
+  "A": "https://api.pixellab.ai/mcp/isometric-tile/bc627e47-bb1a-4f88-a9e4-9d3624974c64/download",
+  "S": "https://api.pixellab.ai/mcp/isometric-tile/0f6926ee-d65c-4b79-aafa-6ece99857175/download",
+  "C": "https://api.pixellab.ai/mcp/isometric-tile/aff6aaed-b463-4165-876f-f9a882a4579d/download",
+  "G": "https://api.pixellab.ai/mcp/isometric-tile/7bd2ce13-8433-412f-9b77-a1e4ed91fa0b/download",
+  "X": "https://api.pixellab.ai/mcp/isometric-tile/582a8c24-fd0f-4c8e-b6b6-f1d42fd638ae/download",
+  "M": "https://api.pixellab.ai/mcp/isometric-tile/887084f1-c0c6-45d3-b279-42597eaecaa6/download"
+ },
+ "anchors": {
+  "building": {
+   "bx": 260,
+   "by": 283,
+   "lx": 50,
+   "ly": 85,
+   "rx": 360,
+   "ry": 123,
+   "w": 400,
+   "h": 320
+  },
+  "building_alt": {
+   "bx": 158,
+   "by": 237,
+   "lx": 12,
+   "ly": 177,
+   "rx": 305,
+   "ry": 177,
+   "w": 320,
+   "h": 256
+  }
+ }
+}

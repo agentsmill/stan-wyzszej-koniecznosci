@@ -1,0 +1,24 @@
+{
+ "cell": {
+  "width": 48,
+  "height": 48
+ },
+ "columns": 8,
+ "rows": [
+  {
+   "row": 0,
+   "type": "rotations",
+   "frame_count": 8,
+   "directions": [
+    "south",
+    "south-east",
+    "east",
+    "north-east",
+    "north",
+    "north-west",
+    "west",
+    "south-west"
+   ]
+  }
+ ]
+}
