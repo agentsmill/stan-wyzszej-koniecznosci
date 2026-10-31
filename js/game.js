@@ -19,7 +19,7 @@ const GAME = {
     if (!this.tiles.X) this.tiles.X = null; if (!this.tiles.M) this.tiles.M = null; if (!this.tiles.H) this.tiles.H = this.tiles.G;
     this.tiles._oy = 0;
     MAP.build();
-    this.bindInput();
+    this.bindInput(); this.applyMode();
     const q = new URLSearchParams(location.search); this.speed = +q.get('speed') || 1; this.auto = q.get('auto') === '1';
     this.state = 'menu'; UI.showMenu();
     if (q.get('side')) this.start(q.get('side'));
@@ -37,14 +37,46 @@ const GAME = {
     UI.log(side === 'inside' ? 'Trzymasz budynek. Stawiaj kordony i sędziów przy drzwiach (karty na dole, 1–9).' : 'Wysyłasz ludzi pod drzwi. Kliknij punkt wejścia na ulicy, potem kartę (1–8).');
     UI.ticker('Sędzia Korwin-Piotrowska zarządziła przerwę w czynnościach prezesa. Konto TK na X: „zamach stanu".');
     UI.hint(side === 'inside' ? 'Wybierz kartę i kliknij kafel na dziedzińcu.' : 'Kliknij jeden z punktów wejścia (romby na ulicy), potem kartę.');
-    this.selectedSpawn = 1;
+    this.selectedSpawn = 1; this.pending = null; UI.setSelecting(false);
+    if (this.mobile) { UI.hint(side === 'inside' ? 'Wybierz kartę, potem tapnij kafel dwa razy. Przeciągaj mapę palcem.' : 'Punkt wejścia: zachód (romby na ulicy, przeciągnij mapę). Tapnij kartę, żeby wysłać.'); requestAnimationFrame(() => this.resizeCanvas(true)); }
   },
 
   /* ---------- pętla ---------- */
   fitHud() {
-    const r = this.canvas.getBoundingClientRect(); const hud = document.getElementById('hud');
+    const hud = document.getElementById('hud');
+    if (this.mobile) { hud.style.transform = ''; this.syncCanvasSize(); return; }
+    const r = this.canvas.getBoundingClientRect();
     hud.style.transform = `translate(${r.left}px, ${r.top}px) scale(${r.width / 1280})`;
   },
+  /* ---------- tryb mobilny i kamera ---------- */
+  detectMobile() { const w = window.innerWidth, h = window.innerHeight; const coarse = !!(window.matchMedia && matchMedia('(pointer: coarse)').matches); return w < 900 || (coarse && Math.min(w, h) < 900); },
+  applyMode() {
+    const was = this.mobile; this.mobile = this.detectMobile(); document.body.classList.toggle('mobile', this.mobile);
+    if (!this.mobile) { this.canvas.width = 1280; this.canvas.height = 768; this.view = { scale: 1, x: 0, y: 0, fit: 1, dpr: 0 }; this.pending = null; return; }
+    requestAnimationFrame(() => this.resizeCanvas(was !== this.mobile || !this.view || !this.view.dpr));
+  },
+  syncCanvasSize() { const cv = this.canvas, r = cv.getBoundingClientRect(); const dpr = Math.min(2, window.devicePixelRatio || 1); if (Math.abs(r.width * dpr - cv.width) > 2 || Math.abs(r.height * dpr - cv.height) > 2) this.resizeCanvas(false); },
+  resizeCanvas(recenter) {
+    const cv = this.canvas, r = cv.getBoundingClientRect(); if (r.width < 10 || r.height < 10) return;
+    const dpr = Math.min(2, window.devicePixelRatio || 1);
+    cv.width = Math.round(r.width * dpr); cv.height = Math.round(r.height * dpr);
+    const portrait = r.height > r.width;
+    const fit = portrait ? r.width / 560 : r.width / 1280;
+    const v = (this.view && this.view.dpr) ? this.view : {};
+    const userScale = (!recenter && v.userScale) ? v.userScale : null;
+    this.view = { x: v.x ?? 0, y: v.y ?? 0, fit, dpr, userScale, scale: (userScale || fit) * dpr };
+    if (recenter || v.x === undefined) this.centerCamera(portrait ? 820 : 640, portrait ? 440 : 420);
+    this.clampCamera();
+  },
+  centerCamera(wx, wy) { const v = this.view; v.x = wx - this.canvas.width / 2 / v.scale; v.y = wy - this.canvas.height / 2 / v.scale; this.clampCamera(); },
+  clampCamera() {
+    const v = this.view; if (!v || !v.dpr) return; const vw = this.canvas.width / v.scale, vh = this.canvas.height / v.scale, M = 90;
+    v.x = vw >= 1280 + 2 * M ? (1280 - vw) / 2 : Math.max(-M, Math.min(1280 + M - vw, v.x));
+    v.y = vh >= 768 + 2 * M ? (768 - vh) / 2 : Math.max(-M, Math.min(768 + M - vh, v.y));
+  },
+  toWorld(clientX, clientY) { const cv = this.canvas, r = cv.getBoundingClientRect(); const v = this.view || { scale: 1, x: 0, y: 0 }; const px = (clientX - r.left) * cv.width / r.width, py = (clientY - r.top) * cv.height / r.height; return { x: px / v.scale + v.x, y: py / v.scale + v.y }; },
+  setUserScale(sc, clientX, clientY) { const v = this.view; if (!v || !v.dpr) return; sc = Math.max(v.fit * 0.7, Math.min(2.5, sc)); const before = this.toWorld(clientX, clientY); v.userScale = sc; v.scale = sc * v.dpr; const after = this.toWorld(clientX, clientY); v.x += before.x - after.x; v.y += before.y - after.y; this.clampCamera(); },
+  cancelSelection() { this.selected = null; this.pending = null; UI.hint(''); UI.setSelecting(false); },
   loop(ts) {
     let dt = Math.min(0.05, (ts - this.last) / 1000 || 0); this.last = ts; dt *= this.speed || 1;
     this.fitHud();
@@ -188,50 +220,80 @@ const GAME = {
 
   /* ---------- wejście ---------- */
   bindInput() {
-    const cv = this.canvas;
-    const toCanvas = e => { const r = cv.getBoundingClientRect(); return { x: (e.clientX - r.left) * cv.width / r.width, y: (e.clientY - r.top) * cv.height / r.height }; };
-    cv.addEventListener('mousemove', e => { const p = toCanvas(e); const g = ISO.toGrid(p.x, p.y); this.hover = { gx: Math.round(g.gx), gy: Math.round(g.gy), x: p.x, y: p.y }; });
-    cv.addEventListener('mouseleave', () => this.hover = null);
-    cv.addEventListener('contextmenu', e => { e.preventDefault(); this.selected = null; UI.hint(''); });
-    cv.addEventListener('click', e => { if (this.state !== 'play') return; const p = toCanvas(e); this.onClick(p); });
+    const cv = this.canvas; const ptrs = new Map(); let g = null;
+    cv.addEventListener('pointerdown', e => {
+      if (e.button === 2) return;
+      try { cv.setPointerCapture(e.pointerId); } catch (_) { /* brak wsparcia */ }
+      ptrs.set(e.pointerId, { x: e.clientX, y: e.clientY });
+      if (ptrs.size === 1) g = { sx: e.clientX, sy: e.clientY, camX: this.view.x, camY: this.view.y, moved: false };
+      else if (ptrs.size === 2 && g) { const [a, b] = [...ptrs.values()]; g.dist0 = Math.hypot(a.x - b.x, a.y - b.y); g.scale0 = this.view.userScale || this.view.fit; g.moved = true; }
+      e.preventDefault();
+    });
+    cv.addEventListener('pointermove', e => {
+      if (ptrs.has(e.pointerId)) ptrs.set(e.pointerId, { x: e.clientX, y: e.clientY });
+      if (!this.mobile) { const w = this.toWorld(e.clientX, e.clientY); const gr = ISO.toGrid(w.x, w.y); this.hover = { gx: Math.round(gr.gx), gy: Math.round(gr.gy) }; }
+      if (!g || !ptrs.has(e.pointerId)) return;
+      if (ptrs.size >= 2 && g.dist0) { const [a, b] = [...ptrs.values()]; const d = Math.hypot(a.x - b.x, a.y - b.y); if (d > 0) this.setUserScale(g.scale0 * d / g.dist0, (a.x + b.x) / 2, (a.y + b.y) / 2); return; }
+      const dx = e.clientX - g.sx, dy = e.clientY - g.sy;
+      if (!g.moved && Math.hypot(dx, dy) > 8) g.moved = true;
+      if (g.moved && this.mobile) { const r = cv.getBoundingClientRect(); const k = cv.width / r.width / this.view.scale; this.view.x = g.camX - dx * k; this.view.y = g.camY - dy * k; this.clampCamera(); }
+    });
+    const end = e => {
+      if (!ptrs.has(e.pointerId)) return; ptrs.delete(e.pointerId);
+      if (ptrs.size === 0) { if (g && !g.moved && this.state === 'play') this.onTap(e.clientX, e.clientY); g = null; }
+    };
+    cv.addEventListener('pointerup', end); cv.addEventListener('pointercancel', end);
+    cv.addEventListener('mouseleave', () => { if (!this.mobile) this.hover = null; });
+    cv.addEventListener('contextmenu', e => { e.preventDefault(); this.cancelSelection(); });
     window.addEventListener('keydown', e => {
       if (this.state !== 'play') return;
-      if (e.key === 'Escape') { this.selected = null; UI.hint(''); }
+      if (e.key === 'Escape') this.cancelSelection();
       if (e.key === 'r') this.showRanges = !this.showRanges;
       const n = parseInt(e.key); if (n >= 1 && n <= UI.cards.length) { const c = UI.cards[n - 1]; this.onCard(c.type, c.key); }
     });
+    window.addEventListener('resize', () => this.applyMode());
+    window.addEventListener('orientationchange', () => setTimeout(() => this.applyMode(), 300));
   },
   onCard(type, key) {
     if (this.side === 'inside') {
       if (type === 'boss') { this.summonBoss(key); return; }
-      if (key === 'immunity') { this.selected = { type, key }; UI.hint('Kliknij bossa na mapie.'); return; }
-      this.selected = { type, key }; UI.hint(`${TOWERS[key].name}: kliknij kafel. Prawy przycisk / Esc anuluje.`);
+      this.selected = { type, key }; this.pending = null; UI.setSelecting(true);
+      if (key === 'immunity') { UI.hint(this.mobile ? 'Tapnij bossa na mapie (czerwona obwódka).' : 'Kliknij bossa na mapie.'); return; }
+      UI.hint(this.mobile ? `${TOWERS[key].name}: ${TOWERS[key].desc} Tapnij kafel dwa razy.` : `${TOWERS[key].name}: kliknij kafel. Prawy przycisk / Esc anuluje.`);
     } else {
       if (type === 'boss') { if (!this.summonBoss(key)) UI.hint('Za mało poparcia (albo jeszcze nie pora).'); return; }
-      if (!this.spawnUnit(key, this.selectedSpawn)) UI.hint('Za mało poparcia.');
+      if (!this.spawnUnit(key, this.selectedSpawn)) UI.hint('Za mało poparcia.'); else if (this.mobile) UI.hint(`${UNITS[key].name} rusza z punktu: ${MAP.spawns[this.selectedSpawn].name}.`);
     }
   },
-  onClick(p) {
-    const g = ISO.toGrid(p.x, p.y); const gx = Math.round(g.gx), gy = Math.round(g.gy);
+  onTap(clientX, clientY) {
+    const p = this.toWorld(clientX, clientY);
+    const gr = ISO.toGrid(p.x, p.y); const gx = Math.round(gr.gx), gy = Math.round(gr.gy);
     if (this.side === 'outside') {
-      // wybór punktu wejścia
-      let bi = -1, bd = 1.6; MAP.spawns.forEach((s, i) => { const d = ISO.dist(s, { gx: g.gx, gy: g.gy }); if (d < bd) { bd = d; bi = i; } });
-      if (bi >= 0) { this.selectedSpawn = bi; UI.hint(`Punkt wejścia: ${MAP.spawns[bi].name}. Teraz karta (1–8).`); }
+      let bi = -1, bd = this.mobile ? 2.4 : 1.6; MAP.spawns.forEach((s, i) => { const d = ISO.dist(s, { gx: gr.gx, gy: gr.gy }); if (d < bd) { bd = d; bi = i; } });
+      if (bi >= 0) { this.selectedSpawn = bi; UI.hint(`Punkt wejścia: ${MAP.spawns[bi].name}. Teraz karta${this.mobile ? '' : ' (1–8)'}.`); }
       return;
     }
     if (!this.selected) return;
     if (this.selected.key === 'immunity') {
-      let best = null, bd = 40; for (const u of this.units) { if (u.dead || !u.isBoss || u.role !== 'attacker') continue; const s = ISO.toScreen(u.gx, u.gy); const d = Math.hypot(s.x - p.x, s.y - p.y + 20); if (d < bd) { bd = d; best = u; } }
-      if (best) { this.useImmunity(best); this.selected = null; UI.hint(''); } else UI.hint('Celuj w bossa (z czerwoną obwódką).');
+      let best = null, bd = this.mobile ? 64 : 40; for (const u of this.units) { if (u.dead || !u.isBoss || u.role !== 'attacker') continue; const sp = ISO.toScreen(u.gx, u.gy); const d = Math.hypot(sp.x - p.x, sp.y - p.y + 20); if (d < bd) { bd = d; best = u; } }
+      if (best) { this.useImmunity(best); this.cancelSelection(); } else UI.hint('Celuj w bossa (z czerwoną obwódką).');
       return;
     }
-    if (!this.build(this.selected.key, gx, gy)) UI.hint(MAP.canBuild(gx, gy, TOWERS[this.selected.key]) ? 'Za mało legitymacji.' : 'Tu nie można. Dziedziniec, poza drzwiami; sędzia tylko przy drzwiach.');
+    const def = TOWERS[this.selected.key];
+    if (this.mobile && (!this.pending || this.pending.gx !== gx || this.pending.gy !== gy)) {
+      this.pending = { gx, gy };
+      UI.hint(MAP.canBuild(gx, gy, def) ? `${def.name} tutaj? Tapnij ten kafel jeszcze raz.` : 'Tu nie można: dziedziniec, poza drzwiami; sędzia tylko przy drzwiach.');
+      return;
+    }
+    if (!this.build(this.selected.key, gx, gy)) UI.hint(MAP.canBuild(gx, gy, def) ? 'Za mało legitymacji.' : 'Tu nie można. Dziedziniec, poza drzwiami; sędzia tylko przy drzwiach.');
+    else if (this.mobile) { this.pending = null; UI.hint(`${def.name} stoi. Tapnij kolejny kafel albo ✕.`); }
   },
 
   /* ---------- render ---------- */
   render() {
-    const ctx = this.ctx; ctx.imageSmoothingEnabled = false;
-    ctx.fillStyle = '#05070f'; ctx.fillRect(0, 0, 1280, 768);
+    const ctx = this.ctx, v = this.view || { scale: 1, x: 0, y: 0 }; ctx.setTransform(1, 0, 0, 1, 0, 0); ctx.imageSmoothingEnabled = false;
+    ctx.fillStyle = '#05070f'; ctx.fillRect(0, 0, this.canvas.width, this.canvas.height);
+    ctx.setTransform(v.scale, 0, 0, v.scale, -v.x * v.scale, -v.y * v.scale);
     MAP.drawTerrain(ctx, this.tiles);
     this.drawMarkers(ctx);
     // drawables wg głębokości
@@ -264,8 +326,9 @@ const GAME = {
     for (const [k, d] of Object.entries(MAP.doors)) { const p = ISO.toScreen(d.gx, d.gy); ctx.strokeStyle = 'rgba(255,209,102,.45)'; ctx.lineWidth = 1.5; ctx.beginPath(); ctx.moveTo(p.x, p.y - 16); ctx.lineTo(p.x + 32, p.y); ctx.lineTo(p.x, p.y + 16); ctx.lineTo(p.x - 32, p.y); ctx.closePath(); ctx.stroke(); }
   },
   drawHover(ctx) {
-    if (!this.hover || this.side !== 'inside' || !this.selected || this.selected.key === 'immunity') return;
-    const { gx, gy } = this.hover; if (!ISO.inBounds(gx, gy)) return;
+    const h = this.mobile ? this.pending : this.hover;
+    if (!h || this.side !== 'inside' || !this.selected || this.selected.key === 'immunity') return;
+    const { gx, gy } = h; if (!ISO.inBounds(gx, gy)) return;
     const ok = MAP.canBuild(gx, gy, TOWERS[this.selected.key]); const p = ISO.toScreen(gx, gy);
     ctx.fillStyle = ok ? 'rgba(124,92,255,.35)' : 'rgba(255,77,77,.35)'; ctx.strokeStyle = ok ? '#7c5cff' : '#ff4d4d'; ctx.lineWidth = 2;
     ctx.beginPath(); ctx.moveTo(p.x, p.y - 16); ctx.lineTo(p.x + 32, p.y); ctx.lineTo(p.x, p.y + 16); ctx.lineTo(p.x - 32, p.y); ctx.closePath(); ctx.fill(); ctx.stroke();

@@ -8,8 +8,10 @@
 }
 * { box-sizing: border-box; }
 html, body { margin: 0; height: 100%; background: var(--bg); color: var(--ink); font-family: 'VT323', monospace; font-size: 22px; overflow: hidden; }
-#stage { position: relative; width: 100vw; height: 100vh; display: flex; align-items: center; justify-content: center; }
-#game { image-rendering: pixelated; image-rendering: crisp-edges; width: min(100vw, calc(100vh * 1280 / 768)); height: auto; aspect-ratio: 1280 / 768; background: #05070f; cursor: crosshair; }
+:root { color-scheme: dark; }
+#stage { position: relative; width: 100%; height: 100%; display: flex; align-items: center; justify-content: center; }
+#game { image-rendering: pixelated; image-rendering: crisp-edges; width: min(100vw, calc(100vh * 1280 / 768)); height: auto; aspect-ratio: 1280 / 768; background: #05070f; cursor: crosshair; touch-action: none; }
+.fab, #toast { display: none; }
 .hidden { display: none !important; }
 
 /* HUD */
@@ -82,3 +84,71 @@ h1 { font-family: 'Press Start 2P', monospace; font-size: 34px; line-height: 1.5
 .ending-btns button:hover { border-color: #fff; }
 .glitch { animation: glitch .12s steps(2) 8; }
 @keyframes glitch { 0%{filter: hue-rotate(0) contrast(1)} 50%{filter: hue-rotate(180deg) contrast(2) invert(.2)} 100%{filter:none} }
+
+/* ===================== MOBILE ===================== */
+body.mobile { position: fixed; inset: 0; font-size: 16px; }
+body.mobile #stage { flex-direction: column; align-items: stretch; justify-content: flex-start; }
+body.mobile #hud { display: contents; }
+body.mobile #hud.hidden { display: none !important; }
+body.mobile #game { order: 2; flex: 1 1 0; min-height: 0; width: 100%; height: 0; aspect-ratio: auto; cursor: default; }
+/* górny pasek: 2 rzędy */
+body.mobile #topbar { position: static; order: 1; display: grid; grid-template-columns: auto 1fr auto; grid-template-rows: auto auto; gap: 4px 6px; padding: calc(4px + env(safe-area-inset-top, 0px)) 8px 4px; background: #05070f; }
+body.mobile #clock-box { display: contents; }
+body.mobile #side-box { grid-column: 1; grid-row: 1; padding: 3px 6px; display: flex; align-items: center; }
+body.mobile #side-name { font-size: 9px; letter-spacing: 0; }
+body.mobile #side-slogan { display: none; }
+body.mobile #clock { grid-column: 2; grid-row: 1; font-size: 14px; align-self: center; text-align: center; }
+body.mobile #polska-box { grid-column: 3; grid-row: 1; padding: 2px 6px; min-width: 150px; }
+body.mobile #polska-box .label { font-size: 8px; }
+body.mobile #polska-bar { height: 12px; margin: 2px 0; }
+body.mobile #polska-val { font-size: 10px; line-height: 8px; }
+body.mobile #resource { font-size: 13px; line-height: 1.1; }
+body.mobile #ticker { grid-column: 1 / -1; grid-row: 2; font-size: 13px; opacity: .8; text-align: center; }
+/* karty: przewijana listwa */
+body.mobile #cards { position: static; order: 4; flex-wrap: nowrap; justify-content: flex-start; overflow-x: auto; overflow-y: hidden; gap: 6px; padding: 4px 8px calc(6px + env(safe-area-inset-bottom, 0px)); background: #05070f; scrollbar-width: none; -webkit-overflow-scrolling: touch; }
+body.mobile #cards::-webkit-scrollbar { display: none; }
+body.mobile .card { flex: 0 0 auto; width: 108px; min-height: 72px; padding: 4px 6px 16px 6px; transition: none; }
+body.mobile .card:hover { transform: none; }
+body.mobile .card.sel { background: #1a1540; }
+body.mobile .card .ttl { font-size: 14px; line-height: 1; margin-left: 30px; padding-right: 24px; min-height: 2.2em; }
+body.mobile .card .desc, body.mobile .card .key { display: none; }
+body.mobile .card .cost { font-size: 15px; top: 3px; }
+body.mobile .card .pl { font-size: 12px; bottom: 3px; }
+body.mobile .card .ico { width: 26px; height: 26px; top: 3px; left: 3px; }
+/* podpowiedź między mapą a kartami */
+body.mobile #hint { position: static; order: 3; transform: none; font-size: 14px; line-height: 1.1; height: 2.4em; overflow: hidden; padding: 2px 10px; text-align: center; background: #05070f; display: flex; align-items: center; justify-content: center; }
+/* log pod przyciskiem + toast ostatniego zdarzenia */
+body.mobile #log { display: none; position: absolute; left: 8px; right: 8px; top: 132px; width: auto; text-align: left; font-size: 14px; background: rgba(5,7,15,.94); border: 2px solid #2a2d4a; padding: 8px; max-height: 45%; overflow-y: auto; z-index: 3; }
+body.mobile.showlog #log { display: block; }
+body.mobile .fab { display: block; position: absolute; z-index: 3; font-family: 'VT323', monospace; font-size: 16px; color: #fff; background: rgba(8,10,24,.9); border: 2px solid #555; padding: 6px 10px; pointer-events: auto; }
+body.mobile #logbtn { right: 8px; top: 86px; }
+body.mobile #cancelbtn { left: 8px; top: 86px; border-color: #ffd166; color: #ffd166; display: none; }
+body.mobile.selecting #cancelbtn { display: block; }
+body.mobile #toast { display: block; position: absolute; left: 50%; top: 138px; transform: translateX(-50%); max-width: 80%; font-size: 14px; line-height: 1.15; color: #fff; background: rgba(8,10,24,.92); border: 1px solid #444; padding: 4px 10px; opacity: 0; transition: opacity .3s; pointer-events: none; z-index: 2; }
+body.mobile #toast.on { opacity: 1; }
+/* menu i ekran końcowy na małych ekranach */
+@media (max-width: 720px), (max-height: 520px) {
+  .overlay { align-items: flex-start; overflow-y: auto; padding: 12px 0; }
+  .menu-inner { padding: 10px 14px; max-width: 100%; }
+  h1 { font-size: 20px; line-height: 1.5; text-shadow: 3px 3px 0 #3a1a5a; }
+  .sub { font-size: 17px; margin-bottom: 12px; }
+  .choose { font-size: 10px; }
+  .sides { flex-direction: column; gap: 10px; }
+  .side-btn { width: 100%; padding: 12px; }
+  .side-btn .side-title { font-size: 12px; }
+  .side-btn .side-desc { font-size: 16px; }
+  .fine { font-size: 14px; }
+  #ending-victory { font-size: 20px; padding: 0 14px; }
+  #ending-loss { padding: 0 12px; max-width: 100%; }
+  #ending-loss h1 { font-size: 20px; }
+  #ending-stats { font-size: 15px; display: block; }
+  #ending-stats .row { gap: 12px; }
+  .ending-btns { flex-wrap: wrap; gap: 8px; }
+  .ending-btns button { font-size: 10px; padding: 10px 12px; }
+}
+@media (max-width: 720px) and (orientation: landscape) {
+  body.mobile #topbar { grid-template-rows: auto; }
+  body.mobile #ticker { display: none; }
+  body.mobile .card { width: 96px; min-height: 60px; }
+  body.mobile .card .ttl { font-size: 13px; min-height: 2em; }
+}

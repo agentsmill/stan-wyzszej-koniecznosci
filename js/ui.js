@@ -6,11 +6,13 @@ const UI = {
   el: {}, cards: [], logLines: [],
   init(game) {
     const $ = id => document.getElementById(id);
-    ['hud', 'menu', 'loading', 'loading-pct', 'ending', 'ending-victory', 'ending-loss', 'ending-stats', 'side-name', 'side-slogan', 'clock', 'ticker', 'polska-fill', 'polska-val', 'resource-name', 'resource-val', 'log', 'cards', 'hint', 'loss-count', 'btn-other', 'btn-again']
+    ['hud', 'menu', 'loading', 'loading-pct', 'ending', 'ending-victory', 'ending-loss', 'ending-stats', 'side-name', 'side-slogan', 'clock', 'ticker', 'polska-fill', 'polska-val', 'resource-name', 'resource-val', 'log', 'cards', 'hint', 'loss-count', 'btn-other', 'btn-again', 'toast', 'logbtn', 'cancelbtn']
       .forEach(id => this.el[id] = $(id));
     document.querySelectorAll('.side-btn').forEach(b => b.addEventListener('click', () => game.start(b.dataset.side)));
     this.el['btn-other'].addEventListener('click', () => game.start(SIDES[game.side].enemy));
     this.el['btn-again'].addEventListener('click', () => game.start(game.side));
+    this.el.logbtn.addEventListener('click', () => document.body.classList.toggle('showlog'));
+    this.el.cancelbtn.addEventListener('click', () => game.cancelSelection());
     const n = +localStorage.getItem('swk_losses') || 0;
     this.el['loss-count'].textContent = n ? `Polska przegrała na tym komputerze już ${n} ${n === 1 ? 'raz' : 'razy'}.` : '';
   },
@@ -41,7 +43,7 @@ const UI = {
   update(game) {
     const m = Math.floor(game.gameMin); this.el.clock.textContent = `${String(Math.floor(m / 60)).padStart(2, '0')}:${String(m % 60).padStart(2, '0')}`;
     const p = Math.max(0, game.polska); this.el['polska-fill'].style.width = p + '%'; this.el['polska-fill'].style.backgroundPosition = `${100 - p}% 0`; this.el['polska-val'].textContent = Math.ceil(p);
-    this.el['resource-val'].textContent = Math.floor(game.money[game.side]);
+    this.el['resource-val'].textContent = game.mobile ? `${Math.floor(game.money[game.side])} · drzwi ${game.breaches}/${CFG.OUTSIDE_WIN_BREACHES}` : Math.floor(game.money[game.side]);
     this.el['side-slogan'].textContent = `${SIDES[game.side].slogan}  ·  pod drzwiami: ${game.breaches}/${CFG.OUTSIDE_WIN_BREACHES}`;
     const money = game.money[game.side];
     for (const c of this.cards) {
@@ -53,7 +55,9 @@ const UI = {
     }
   },
   ticker(text) { this.el.ticker.textContent = text; },
+  setSelecting(on) { document.body.classList.toggle('selecting', !!on); },
   log(text, cls = '') {
+    if (document.body.classList.contains('mobile')) { const t = this.el.toast; t.textContent = text; t.classList.add('on'); clearTimeout(this._toastT); this._toastT = setTimeout(() => t.classList.remove('on'), 3200); }
     this.logLines.push({ text, cls }); if (this.logLines.length > 8) this.logLines.shift();
     this.el.log.innerHTML = this.logLines.map(l => `<div class="${l.cls}">${l.text}</div>`).join('');
   },

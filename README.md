@@ -31,6 +31,10 @@ Parametry URL do testów: `?side=inside|outside` (od razu start), `?speed=3` (pr
   (licznik „pod drzwiami"). Do środka przechodzi tylko Prezydent.
 - **NA ZEWNĄTRZ**: kliknij romb punktu wejścia na ulicy, potem kartę (1–8) — jednostka rusza od razu.
 - `R` pokazuje/ukrywa zasięgi.
+- **Telefon / tablet** (szerokość poniżej 900 px albo ekran dotykowy): mapę przeciągasz palcem i przybliżasz
+  dwoma palcami; wieżę stawiasz dwoma tapnięciami w ten sam kafel (pierwsze pokazuje podgląd i zasięg),
+  ✕ anuluje; punkt wejścia wybierasz tapnięciem w romb na ulicy; karty przewijasz w listwie na dole;
+  log zdarzeń jest pod przyciskiem „log", ostatnie zdarzenie pokazuje się jako dymek.
 
 ## Struktura
 
