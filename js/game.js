@@ -53,7 +53,7 @@ const GAME = {
     requestAnimationFrame(t => this.loop(t));
   },
   update(dt) {
-    this.time += dt;
+    this.time += dt; this.dtNow = dt;
     this.gameMin = CFG.GAME_START_MIN + (this.time / CFG.REAL_SECONDS) * (CFG.GAME_END_MIN - CFG.GAME_START_MIN);
     this.money.inside += CFG.ECON.inside.income * dt; this.money.outside += CFG.ECON.outside.income * dt;
     // linia czasu
@@ -132,7 +132,8 @@ const GAME = {
     return true;
   },
   useImmunity(unit, byAI = false) {
-    const def = TOWERS.immunity; if (this.money.inside < def.cost) return false;
+    const def = TOWERS.immunity; if (this.money.inside < def.cost || unit.immunityUsed) { if (unit.immunityUsed && !byAI) UI.hint('Wniosek wobec tej osoby już złożony.'); return false; }
+    unit.immunityUsed = true;
     this.money.inside -= def.cost; this.polskaCost(def.polska); unit.damage(def.dmg, this, 'immunity'); unit.say('50 tomów akt!', 2.5);
     this.fx.push(new Ring(unit.gx, unit.gy, 2, '#ffd166')); UI.log(`Wniosek o uchylenie immunitetu: ${unit.name}.`, byAI ? 'bad' : 'good');
     return true;
@@ -147,9 +148,11 @@ const GAME = {
     this.fx.push(new Ring(g.gx, g.gy, 1.5, '#ffd166')); this.floatAt(g.gx, g.gy, 'CIĘCIE', '#ffd166');
   },
   onBreach(u) {
-    u.dead = true; this.breaches++; this.stats.breaches++; this.polskaCost(CFG.POLSKA_COST.breach);
-    this.floatAt(u.gx, u.gy, 'wszedł', '#ff4d4d');
-    if (u.key === 'president') { UI.log('PREZYDENT WSZEDŁ DO BUDYNKU. Zdjęcie z wnętrza TK.', 'ev'); return this.endGame('outside'); }
+    u.dead = true; this.polskaCost(CFG.POLSKA_COST.breach);
+    if (u.key === 'president') { this.floatAt(u.gx, u.gy, 'wszedł', '#ff4d4d'); UI.log('PREZYDENT WSZEDŁ DO BUDYNKU. Zdjęcie z wnętrza TK.', 'ev'); return this.endGame('outside'); }
+    this.breaches++; this.stats.breaches++;
+    this.floatAt(u.gx, u.gy, 'wyprowadzony', '#ff8080');
+    if (this.breaches === 1 || this.breaches % 5 === 0) UI.log(`Pod drzwiami było już ${this.breaches} osób (${CFG.OUTSIDE_WIN_BREACHES} = „zdjęcie z wnętrza").`, this.side === 'outside' ? 'good' : 'bad');
     if (this.breaches >= CFG.OUTSIDE_WIN_BREACHES) return this.endGame('outside');
   },
   onUnitDied(u, src) {
@@ -163,7 +166,7 @@ const GAME = {
   onCitizenLost(u, why) { this.stats.citizensLost++; this.polskaCost(CFG.POLSKA_COST.citizenLost); UI.log(`Obywatel ze skargą konstytucyjną zawraca (${why}). POLSKA −2.`, 'bad'); },
   onCitizenFiled(u) { this.stats.citizensFiled++; this.polska = Math.min(100, this.polska + 1); UI.log('Obywatel złożył skargę. Ktoś ją kiedyś rozpatrzy. POLSKA +1.', 'good'); this.floatAt(u.gx, u.gy, 'skarga złożona', '#9be39b'); },
   endGame(winner) {
-    if (this.ended) return; this.ended = true; this.state = 'ending'; UI.showEnding(this, winner);
+    if (this.ended) return; this.ended = true; this.state = 'ending'; this.winner = winner; UI.showEnding(this, winner);
   },
 
   /* ---------- pomocnicze ---------- */

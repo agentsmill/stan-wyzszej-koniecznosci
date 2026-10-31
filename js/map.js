@@ -131,6 +131,8 @@ const MAP = {
   },
   rebuildFields() {
     this.fields.main = this.computeField([this.doors.main]);
+    this.fields.in_furtka = this.computeField([this.gates.furtka.inner]);
+    this.fields.in_brama = this.computeField([this.gates.brama.inner]);
     this.fields.side = this.computeField([this.doors.side], { towerCost: 4 });
     this.fields.gate = this.computeField(Object.values(this.gates).filter(g => g.locked).flatMap(g => g.along === 'gx'
       ? [g.approach, { gx: g.approach.gx - 1, gy: g.approach.gy }, { gx: g.approach.gx + 1, gy: g.approach.gy }]

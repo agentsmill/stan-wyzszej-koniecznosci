@@ -16,8 +16,8 @@ const CFG = {
   },
   // --- ekonomia ---
   ECON: {
-    inside:  { start: 70, income: 2.6 },
-    outside: { start: 60, income: 2.6 },
+    inside:  { start: 90, income: 2.6 },
+    outside: { start: 60, income: 3.0 },
   },
   CITIZEN_EVERY: 22,             // s realne
   /* TODO (dla autora): własna reguła, jak Polska traci. Wywoływana co klatkę.
@@ -28,7 +28,8 @@ const CFG = {
     return 0;
   },
   CITIZEN_PATIENCE: 7,           // s bez drogi -> rezygnuje
-  OUTSIDE_WIN_BREACHES: 12,
+  OUTSIDE_WIN_BREACHES: 20,          // tylu ludzi pod drzwiami = nominalne zwycięstwo zewnątrz
+  DOOR_TIME: 3.5,                    // s dobijania się do drzwi, zanim policja wyprowadzi
 };
 
 /* Strony — teksty */
@@ -54,18 +55,24 @@ const SIDES = {
 /* ---------- WIEŻE (strona wewnątrz) ---------- */
 const TOWERS = {
   barrier: {
-    name: 'Barierka', cost: 10, polska: 0.5, hp: 60, kind: 'block',
-    desc: 'Tania przeszkoda. Tłum ją w końcu przewróci.',
+    name: 'Barierka', cost: 10, polska: 0.5, hp: 180, kind: 'block', pushCap: 6,
+    desc: 'Tania przeszkoda. Tłum przewraca ją powoli.',
     sprite: 'barrier',
   },
   cordon: {
-    name: 'Kordon policji', cost: 20, polska: 1, hp: 140, kind: 'block',
-    push: 6, range: 1.1,
-    desc: 'Blokuje kafel, odpycha sąsiadów. „Policja nie weszła do budynku."',
+    name: 'Kordon policji', cost: 25, polska: 1, hp: 320, kind: 'block',
+    push: 10, range: 1.1, pushCap: 10, regen: 5,
+    desc: 'Blokuje kafel, odpycha. Napór tłumu się nasyca, kordon się przegrupowuje.',
+    sprite: 'police',
+  },
+  riot: {
+    name: 'Oddział prewencji', cost: 45, polska: 2, hp: 600, kind: 'block',
+    push: 14, range: 1.4, pushCap: 12, regen: 8, squad: true,
+    desc: 'Dwa szeregi, tarcze. Trzyma linię godzinami.',
     sprite: 'police',
   },
   judge: {
-    name: 'Sędzia w drzwiach', cost: 35, polska: 0.8, hp: 90, kind: 'aura',
+    name: 'Sędzia w drzwiach', cost: 35, polska: 0.8, hp: 160, kind: 'aura', pushCap: 8,
     range: 2.6, slow: 0.5, nearDoor: 2,
     desc: 'Aura legitymacji spowalnia. Tylko przy drzwiach.',
     sprite: 'judge',
@@ -114,12 +121,12 @@ const INSIDE_BOSSES = {
 /* ---------- JEDNOSTKI NA ZEWNĄTRZ ---------- */
 const UNITS = {
   protester: {
-    name: 'Protestujący', cost: 8, polska: 0.3, hp: 40, speed: 2.2, push: 4,
+    name: 'Protestujący', cost: 8, polska: 0.3, hp: 40, speed: 2.2, push: 3,
     desc: 'Flaga, determinacja, niewiele więcej.',
     sprites: ['protester', 'kibic', 'dresiarz'],
   },
   unionist: {
-    name: 'Związkowiec', cost: 15, polska: 0.5, hp: 120, speed: 1.4, push: 9,
+    name: 'Związkowiec', cost: 15, polska: 0.5, hp: 120, speed: 1.4, push: 7,
     desc: 'Wolny, twardy. Piotr Duda wezwał.',
     sprites: ['unionist'],
   },
@@ -131,7 +138,7 @@ const UNITS = {
   },
   lawyer: {
     name: 'Prawnik z teczką', cost: 20, polska: 0.4, hp: 60, speed: 2.0, push: 2,
-    immuneDecree: true, argue: 12,
+    immuneDecree: true, argue: 8,
     desc: 'Odporny na zarządzenia. Argumentuje z sędziami.',
     sprites: ['lawyer'],
   },
@@ -159,8 +166,8 @@ const OUTSIDE_BOSSES = {
   },
   president: {
     name: 'Prezydent', cost: 100, polska: 15, hp: 1400, speed: 1.6, push: 0,
-    unlockMin: 55, ghost: true, ghostSlow: 0.45, targetDoor: 'side',
-    desc: 'Nie da się go zatrzymać, tylko spowolnić. Celuje w boczne wejście.',
+    unlockMin: 55, ghost: true, ghostSlow: 0.45, targetDoor: 'side', immuneStun: true, pushResist: 0.25,
+    desc: 'Jedyny, kto przechodzi przez kordon. Da się go tylko spowolnić. Celuje w boczne wejście.',
     sprites: ['president'], quote: '„Nie jesteście sędziami."',
   },
 };

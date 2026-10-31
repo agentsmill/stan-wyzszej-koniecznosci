@@ -20,6 +20,7 @@ class Unit {
     this.patience = 0; this.name = def.name; this.ghost = !!def.ghost; this.wander = null;
     this.targetDoor = def.targetDoor || 'main'; this.flash = 0; this.bubble = null; this.bubbleT = 0;
     this.auraT = 0; this.bossTimer = def.duration || 0;
+    this.via = Math.random() < 0.6 ? 'in_furtka' : 'in_brama'; this.doorT = 0;
   }
   get cell() { return { gx: Math.round(this.gx), gy: Math.round(this.gy) }; }
   get depth() { return this.gx + this.gy + 0.01; }
@@ -44,8 +45,8 @@ class Unit {
       const to = this.role === 'citizen' ? MAP.citizenSpawn : pick(MAP.spawns);
       this.moveToward(to.gx, to.gy, dt, 2.2); if (ISO.dist(this, to) < 0.3 || this.life > 12) this.dead = true; return;
     }
-    if (this.frozenUntil > now) { this.anim = null; return; }
-    if (this.stunUntil > now) { this.anim = null; return; }
+    if (this.frozenUntil > now && !this.def.immuneStun) { this.anim = null; return; }
+    if (this.stunUntil > now && !this.def.immuneStun) { this.anim = null; return; }
     if (this.isBoss && this.bossTimer > 0) { this.bossTimer -= dt; if (this.bossTimer <= 0) { this.state = 'leaving'; game.log(`${this.name} schodzi ze sceny.`); return; } }
 
     if (this.role === 'insideBoss') return this.updateInsideBoss(dt, game);
@@ -75,7 +76,19 @@ class Unit {
     let field = this.targetDoor === 'side' ? MAP.fields.side : MAP.fields.main;
     if (def.stopAtGate) field = MAP.fields.gate.length ? MAP.fields.gateAll : field;
     const door = MAP.doors[this.targetDoor];
-    if (ISO.dist(this, door) < 0.2) { game.onBreach(this); return; }
+    if (ISO.dist(this, door) < 0.2) {
+      if (this.key === 'president') { game.onBreach(this); return; }
+      // zwykli dobijają się do drzwi, po chwili policja ich wyprowadza
+      this.state = 'door'; this.anim = 'idle'; this.dir = this.targetDoor === 'main' ? 'north-east' : 'north-west';
+      this.doorT += dt; game.clash += dt;
+      if (this.doorT >= CFG.DOOR_TIME) game.onBreach(this);
+      return;
+    }
+    // przed wejściem na dziedziniec każdy idzie „swoją" bramą, potem do drzwi
+    if (!MAP.courtyard(c.gx, c.gy) && !def.stopAtGate && this.targetDoor === 'main') {
+      const vf = MAP.fields[this.via]; const vd = vf?.[c.gy]?.[c.gx];
+      if (vd !== undefined && vd < 1e9) field = vf;
+    }
     let d = field[c.gy]?.[c.gx];
     let usingGate = false;
     if (d === undefined || d >= 1e9) { field = MAP.fields.gate; d = field[c.gy]?.[c.gx]; usingGate = true; }
@@ -183,15 +196,25 @@ class Tower {
     this.hp = def.hp; this.maxHp = def.hp; this.cd = rnd(0, 0.5); this.dir = 'south'; this.t = Math.random() * 10; this.dead = false; this.flash = 0; this.name = def.name;
   }
   get depth() { return this.gx + this.gy; }
-  damage(n, game, src) { if (this.dead) return; this.hp -= n; this.flash = 0.1; if (this.hp <= 0) { this.dead = true; game.onTowerDied(this, src); } }
+  damage(n, game, src) {
+    if (this.dead) return;
+    if (src instanceof Unit && this.def.pushCap) { // napór tłumu się nasyca: więcej rąk nie znaczy szybciej
+      const cap = this.def.pushCap * game.pushMult() * (game.dtNow || 0.016);
+      n = Math.min(n, Math.max(0, cap - (this.pushTaken || 0))); this.pushTaken = (this.pushTaken || 0) + n;
+      if (n <= 0) return;
+    }
+    this.hp -= n; this.flash = 0.1; if (this.hp <= 0) { this.dead = true; game.onTowerDied(this, src); }
+  }
   update(dt, game) {
     this.t += dt; this.flash = Math.max(0, this.flash - dt); this.cd -= dt;
+    const pushed = (this.pushTaken || 0) > 0; this.pushTaken = 0;
+    if (this.def.regen && !pushed && this.hp < this.maxHp) this.hp = Math.min(this.maxHp, this.hp + this.def.regen * dt); // przegrupowanie
     const def = this.def; const mult = game.towerMult(this);
     const near = game.nearestAttacker(this, 3.2);
     if (near) this.dir = ISO.dirFromDelta(near.gx - this.gx, near.gy - this.gy);
     else this.dir = 'south';
     if (def.kind === 'block' && def.push) {
-      for (const u of game.attackersInRange(this, def.range)) { u.damage(def.push * mult * dt, game, this); }
+      for (const u of game.attackersInRange(this, def.range)) { u.damage(def.push * mult * dt * (u.def.pushResist || 1), game, this); }
     } else if (def.kind === 'aura') {
       for (const u of game.attackersInRange(this, def.range)) u.slow = Math.min(u.slow, def.slow);
     } else if (def.kind === 'shoot') {
@@ -203,7 +226,8 @@ class Tower {
   draw(ctx, game) {
     const p = ISO.toScreen(this.gx, this.gy); const x = p.x, y = p.y + 4; const def = this.def;
     ctx.fillStyle = 'rgba(0,0,0,.3)'; ctx.beginPath(); ctx.ellipse(x, y + 1, 14, 6, 0, 0, Math.PI * 2); ctx.fill();
-    if (def.sprite === 'police' || def.sprite === 'judge') drawSprite(ctx, def.sprite, this.dir, 'idle', this.t, x, y, 1);
+    if (def.squad) { drawSprite(ctx, 'police', this.dir, 'idle', this.t + 1.3, x - 11, y - 7, 1); drawSprite(ctx, 'police', this.dir, 'idle', this.t, x + 9, y + 2, 1); }
+    else if (def.sprite === 'police' || def.sprite === 'judge') drawSprite(ctx, def.sprite, this.dir, 'idle', this.t, x, y, 1);
     else {
       const img = ASSETS.img(def.sprite);
       if (img) {

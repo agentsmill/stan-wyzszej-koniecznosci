@@ -42,6 +42,7 @@ const UI = {
     const m = Math.floor(game.gameMin); this.el.clock.textContent = `${String(Math.floor(m / 60)).padStart(2, '0')}:${String(m % 60).padStart(2, '0')}`;
     const p = Math.max(0, game.polska); this.el['polska-fill'].style.width = p + '%'; this.el['polska-fill'].style.backgroundPosition = `${100 - p}% 0`; this.el['polska-val'].textContent = Math.ceil(p);
     this.el['resource-val'].textContent = Math.floor(game.money[game.side]);
+    this.el['side-slogan'].textContent = `${SIDES[game.side].slogan}  ·  pod drzwiami: ${game.breaches}/${CFG.OUTSIDE_WIN_BREACHES}`;
     const money = game.money[game.side];
     for (const c of this.cards) {
       let off = money < c.def.cost;
@@ -72,6 +73,7 @@ const UI = {
         ['Strona, która „wygrała"', winner ? SIDES[winner].name : 'nikt — licznik POLSKA spadł do zera'],
         ['Godzina zakończenia', this.el.clock.textContent],
         ['Wieże postawione / jednostki wysłane', `${s.towers} / ${s.units}`],
+        ['Ludzie, którzy dotarli pod drzwi', `${s.breaches}`],
         ['Bossowie wezwani', `${s.bosses}`],
         ['Obywatele, którzy nie złożyli skargi', `${s.citizensLost}`],
         ...ENDING_FACTS.map(([k, f]) => [k, f(s)]),
