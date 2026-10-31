@@ -6,3 +6,6 @@ promo/seg/
 promo/frames/
 promo/*.mp4
 promo/*.wav
+promo/raw_v/
+promo/seg_v/
+promo/frames_v/

@@ -4,7 +4,7 @@ const { chromium } = require('playwright-core');
 const fs = require('fs'); const path = require('path');
 const OUT = path.resolve(process.argv[2] || 'promo/raw'); const BASE = process.argv[3] || 'http://localhost:8799/';
 fs.mkdirSync(OUT, { recursive: true });
-const W = 1920, H = 1080; const ONLY = process.argv[4] || '';
+const ONLY = process.argv[4] || ''; const [W, H] = (process.argv[5] || '1920x1080').split('x').map(Number);
 const sleep = ms => new Promise(r => setTimeout(r, ms));
 
 async function take(browser, name, fn) {
