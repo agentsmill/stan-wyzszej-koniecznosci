@@ -4,7 +4,11 @@ Cyfrowy performans o nocy z 30 na 31 października 2026 r. w Trybunale Konstytuc
 Tower defense, w którym można grać obiema stronami. Niezależnie od tego, kto „wygra", ekran końcowy
 jest zawsze ten sam: **PRZEGRANA: POLSKA**.
 
-## Uruchomienie
+## Graj online
+
+https://agentsmill.github.io/stan-wyzszej-koniecznosci/ (GitHub Pages z gałęzi `main`).
+
+## Uruchomienie lokalne
 
 Gra to czysty HTML5 Canvas + vanilla JS, ale assety ładuje przez `fetch`, więc potrzebuje
 dowolnego serwera HTTP (otwarcie `index.html` z dysku nie zadziała w Chrome).
