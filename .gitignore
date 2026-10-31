@@ -1,3 +1,8 @@
 .DS_Store
 .claude/settings.local.json
 dist/
+promo/raw/
+promo/seg/
+promo/frames/
+promo/*.mp4
+promo/*.wav
