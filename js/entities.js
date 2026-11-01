@@ -112,11 +112,12 @@ class Unit {
       if (!this.next) { this.anim = 'idle'; return; }
     }
     const tw = MAP.tower(this.next.gx, this.next.gy);
-    if (tw && (!this.ghost || (def.pushJudges && tw.key === 'judge'))) { // duch przechodzi przez policję, ale sędziowie w drzwiach go zatrzymują
+    if (tw && (!this.ghost || (def.pushJudges && tw.key === 'judge') || tw.def.onDoor)) { // duch przechodzi przez policję, ale sędziowie i zamknięte drzwi go zatrzymują
       // napieranie na wieżę
       this.state = 'push'; this.anim = 'idle'; this.pushTarget = tw;
       this.dir = ISO.dirFromDelta(this.next.gx - this.gx, this.next.gy - this.gy);
       let p = (def.push || 0) * dt * game.pushMult();
+      if (def.cutter && tw.key === 'barrier') { tw.damage(1e4, game, this); game.floatAt(tw.gx, tw.gy, T('float.cut'), '#ffd166'); return; } // poseł przecina barierkę
       if (def.argue && tw.key === 'judge') p = def.argue * dt;
       if (tw.key === 'judge' && !def.argue && !def.pushJudges) p *= 0.4; // sędziego tłum raczej nie przewraca
       tw.damage(p, game, this);
@@ -235,6 +236,7 @@ class Tower {
       const img = ASSETS.img(def.sprite);
       if (img) {
         let flip = def.sprite === 'barrier' && !(MAP.tower(this.gx, this.gy - 1)?.key === 'barrier' || MAP.tower(this.gx, this.gy + 1)?.key === 'barrier');
+        if (def.onDoor) flip = (this.gx === MAP.doors.main.gx && this.gy === MAP.doors.main.gy); // drzwi główne na ścianie SW, boczne na SE
         ctx.save(); if (flip) { ctx.translate(x, 0); ctx.scale(-1, 1); ctx.translate(-x, 0); }
         ctx.drawImage(img, Math.round(x - img.width / 2), Math.round(y - img.height + 14), img.width, img.height); ctx.restore();
       } else { ctx.fillStyle = '#88f'; ctx.fillRect(x - 10, y - 20, 20, 20); }

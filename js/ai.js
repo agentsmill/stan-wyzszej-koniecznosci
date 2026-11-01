@@ -6,7 +6,7 @@ const AI = {
   timer: 0,
   /* plan obrony: kolejność ma znaczenie, zniszczone wieże są odbudowywane */
   insidePlan: [
-    ['cordon', 12, 9], ['cordon', 7, 5], ['judge', 14, 5], ['judge', 17, 3], ['judge', 16, 4], ['judge', 16, 2],
+    ['cordon', 12, 9], ['cordon', 7, 5], ['judge', 14, 5], ['judge', 17, 3], ['door', 16, 3], ['judge', 16, 4], ['judge', 16, 2],
     ['riot', 12, 8], ['barrier', 11, 9], ['barrier', 13, 9], ['decree', 10, 8],
     ['decree', 17, 5], ['riot', 8, 5], ['tweet', 14, 8], ['riot', 16, 5], ['decree', 15, 7], ['decree', 18, 3], ['cordon', 17, 4],
     ['barrier', 14, 9], ['barrier', 10, 9], ['cordon', 12, 8], ['tweet', 9, 7],

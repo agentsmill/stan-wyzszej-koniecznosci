@@ -31,7 +31,7 @@ const GAME = {
     this.money = { inside: CFG.ECON.inside.start, outside: CFG.ECON.outside.start };
     this.units = []; this.towers = []; this.projectiles = []; this.fx = []; this.clash = 0; this.breaches = 0; this.citizenTimer = 6;
     this.stats = { towers: 0, units: 0, bosses: 0, citizensLost: 0, citizensFiled: 0, breaches: 0, towersLost: 0, unitsLost: 0 };
-    this.bossUsed = {}; this.judgeCooldownUntil = 0; this.premierActive = false; this.premierUntil = 0; this.policeStateUntil = 0; this.freezeUntil = 0; this.selected = null; this.timelineIdx = 0;
+    this.bossUsed = {}; this.judgeCooldownUntil = 0; this.paused = false; UI.setPaused(false); this.premierActive = false; this.premierUntil = 0; this.policeStateUntil = 0; this.freezeUntil = 0; this.selected = null; this.timelineIdx = 0;
     MAP.build(); MAP.rebuildFields(); AI.reset();
     UI.showGame(this); UI.log(T('log.night'), 'ev');
     UI.log(T(side === 'inside' ? 'log.intro.inside' : 'log.intro.outside'));
@@ -76,11 +76,12 @@ const GAME = {
   },
   toWorld(clientX, clientY) { const cv = this.canvas, r = cv.getBoundingClientRect(); const v = this.view || { scale: 1, x: 0, y: 0 }; const px = (clientX - r.left) * cv.width / r.width, py = (clientY - r.top) * cv.height / r.height; return { x: px / v.scale + v.x, y: py / v.scale + v.y }; },
   setUserScale(sc, clientX, clientY) { const v = this.view; if (!v || !v.dpr) return; sc = Math.max(v.fit * 0.7, Math.min(2.5, sc)); const before = this.toWorld(clientX, clientY); v.userScale = sc; v.scale = sc * v.dpr; const after = this.toWorld(clientX, clientY); v.x += before.x - after.x; v.y += before.y - after.y; this.clampCamera(); },
+  togglePause() { if (this.state !== 'play') return; this.paused = !this.paused; UI.setPaused(this.paused); this.last = performance.now(); },
   cancelSelection() { this.selected = null; this.pending = null; UI.hint(''); UI.setSelecting(false); },
   loop(ts) {
     let dt = Math.min(0.05, (ts - this.last) / 1000 || 0); this.last = ts; dt *= this.speed || 1;
     this.fitHud();
-    if (this.state === 'play') { this.update(dt); UI.update(this); }
+    if (this.state === 'play') { if (!this.paused) this.update(dt); UI.update(this); }
     if (this.state !== 'loading') this.render();
     requestAnimationFrame(t => this.loop(t));
   },
@@ -253,6 +254,7 @@ const GAME = {
     window.addEventListener('keydown', e => {
       if (this.state !== 'play') return;
       if (e.key === 'Escape') this.cancelSelection();
+      if (e.key === ' ' || e.key === 'p' || e.key === 'P') { e.preventDefault(); this.togglePause(); }
       if (e.key === 'r') this.showRanges = !this.showRanges;
       const n = parseInt(e.key); if (n >= 1 && n <= UI.cards.length) { const c = UI.cards[n - 1]; this.onCard(c.type, c.key); }
     });
@@ -287,10 +289,10 @@ const GAME = {
     const def = TOWERS[this.selected.key];
     if (this.mobile && (!this.pending || this.pending.gx !== gx || this.pending.gy !== gy)) {
       this.pending = { gx, gy };
-      UI.hint(MAP.canBuild(gx, gy, def) ? T('hint.confirmHere', { name: def.name }) : T('hint.cantBuild'));
+      UI.hint(MAP.canBuild(gx, gy, def) ? T('hint.confirmHere', { name: def.name }) : T(def.onDoor ? 'hint.doorOnly' : 'hint.cantBuild'));
       return;
     }
-    if (!this.build(this.selected.key, gx, gy)) UI.hint(T(MAP.canBuild(gx, gy, def) ? 'hint.noLegit' : 'hint.cantBuild'));
+    if (!this.build(this.selected.key, gx, gy)) UI.hint(T(MAP.canBuild(gx, gy, def) ? 'hint.noLegit' : (def.onDoor ? 'hint.doorOnly' : 'hint.cantBuild')));
     else if (this.mobile) { this.pending = null; UI.hint(T('hint.placed', { name: def.name })); }
   },
 
@@ -315,6 +317,13 @@ const GAME = {
     for (const f of this.fx) f.draw(ctx);
     if (this.time < this.freezeUntil) { ctx.fillStyle = 'rgba(120,180,255,.10)'; ctx.fillRect(0, 0, 1280, 768); }
     if (this.state === 'play') this.drawHover(ctx);
+    if (this.paused) this.drawPause(ctx);
+  },
+  drawPause(ctx) {
+    ctx.setTransform(1, 0, 0, 1, 0, 0); const W = this.canvas.width, H = this.canvas.height, k = this.mobile ? Math.min(2, window.devicePixelRatio || 1) : 1;
+    ctx.fillStyle = 'rgba(5,7,15,.35)'; ctx.fillRect(0, 0, W, H);
+    ctx.textAlign = 'center'; ctx.font = `${Math.round(34 * k)}px "Press Start 2P", monospace`; ctx.fillStyle = '#000'; ctx.fillText(T('pause.title'), W / 2 + 3 * k, H / 2 - 10 * k + 3 * k); ctx.fillStyle = '#ffd166'; ctx.fillText(T('pause.title'), W / 2, H / 2 - 10 * k);
+    ctx.font = `${Math.round(22 * k)}px VT323, monospace`; ctx.fillStyle = '#fff'; ctx.fillText(T('pause.sub'), W / 2, H / 2 + 26 * k);
   },
   drawGate(ctx, g) {
     const p = ISO.toScreen(g.gx, g.gy); const img = ASSETS.img('fence');

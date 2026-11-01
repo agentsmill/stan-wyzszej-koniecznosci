@@ -161,3 +161,8 @@ Po testach z graczem i symulacjach AI kontra AI:
 - **Prezes partii** (60, 600 HP) też powoli przeciska się przez kordon (30 % prędkości, odrzut ×0,6) i pcha sędziów (8/s).
 - Symulacje AI vs AI na tych liczbach: raz Prezydent wchodzi ok. 2:15 (10 osób pod drzwiami, 3 wieże stracone),
   raz utyka na sędziach, a POLSKA spada do zera ok. 2:50. Obie strony mają co robić.
+- **Pauza taktyczna** (spacja / P / przycisk): czas stoi, AI nie działa, ale gracz może stawiać i wysyłać.
+- **Zamknięte drzwi** (40, 280 HP, limit naporu 15, tylko na kaflu wejścia, max 2): barykada, którą musi sforsować
+  każdy, także Prezydent i Prezes partii. Blokuje też obywateli ze skargą (POLSKA −2 za każdego), więc zamykanie
+  głównego wejścia ma cenę. Sędziów max 5, przegrupowanie 20 s; wniosek o immunitet 220 obrażeń.
+- Tłum kontra kordon bez bossa: związkowiec napiera 12/s (najmocniej), poseł z nożycami przecina barierki od ręki.

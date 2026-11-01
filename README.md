@@ -43,6 +43,7 @@ Parametry URL do testów: `?side=inside|outside` (od razu start), `?speed=3` (pr
   gdy nikt nie napiera; sędziów jest najwyżej 4, po wypchnięciu jednego reszta przegrupowuje się 25 s. Zwykły tłum nie wchodzi do budynku: dobija się do drzwi i zostaje wyprowadzony
   (licznik „pod drzwiami"). Do środka przechodzi tylko Prezydent.
 - **NA ZEWNĄTRZ**: kliknij romb punktu wejścia na ulicy, potem kartę (1–8) — jednostka rusza od razu.
+- **Spacja / P** albo przycisk pod zegarem: pauza taktyczna. Czas stoi, ale można stawiać wieże i wysyłać jednostki.
 - `R` pokazuje/ukrywa zasięgi.
 - **Telefon / tablet** (szerokość poniżej 900 px albo ekran dotykowy): mapę przeciągasz palcem i przybliżasz
   dwoma palcami; wieżę stawiasz dwoma tapnięciami w ten sam kafel (pierwsze pokazuje podgląd i zasięg),

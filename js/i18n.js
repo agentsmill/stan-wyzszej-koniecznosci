@@ -94,6 +94,9 @@ const STR = {
   'end.polskaZero': { pl: 'POLSKA: 0', en: 'POLAND: 0' },
   'spawn.east': { pl: 'wschód', en: 'east' }, 'spawn.west': { pl: 'zachód', en: 'west' }, 'spawn.south': { pl: 'południe', en: 'south' },
   'loading': { pl: 'Ładowanie assetów…', en: 'Loading assets…' },
+  'btn.pause': { pl: '⏸ pauza (spacja)', en: '⏸ pause (space)' }, 'btn.resume': { pl: '▶ dalej (spacja)', en: '▶ resume (space)' },
+  'pause.title': { pl: 'PAUZA', en: 'PAUSED' }, 'pause.sub': { pl: 'Czas stoi. Możesz stawiać i wysyłać. Spacja wznawia.', en: 'Time is stopped. You can still place and send. Space resumes.' },
+  'hint.doorOnly': { pl: 'Zamknięte drzwi stawia się tylko na kaflu wejścia (głównego lub bocznego).', en: 'Locked doors go only on an entrance tile (main or side).' },
   'hint.judgeMax': { pl: 'Więcej sędziów nie ma (max {n} naraz).', en: 'No more judges available (max {n} at once).' },
   'hint.judgeCooldown': { pl: 'Sędziowie się przegrupowują ({s} s).', en: 'The judges are regrouping ({s} s).' },
   'log.judgeRegroup': { pl: 'Sędzia wypchnięty. Pozostali przegrupowują się przez 25 s.', en: 'A judge was pushed out. The others regroup for 25 s.' },
@@ -113,7 +116,7 @@ const DOM_STR = {
   'ending.other': { pl: 'Zagraj drugą stroną', en: 'Play the other side' },
   'ending.again': { pl: 'Od nowa', en: 'Again' },
   'ending.fine': { pl: 'Każda noc w Trybunale kończy się tak samo, niezależnie od tego, kto wygrał.', en: 'Every night at the Tribunal ends the same way, no matter who won.' },
-  'btn.cancel': { pl: '✕ anuluj', en: '✕ cancel' }, 'btn.log': { pl: 'log', en: 'log' },
+  'btn.cancel': { pl: '✕ anuluj', en: '✕ cancel' }, 'btn.log': { pl: 'log', en: 'log' }, 'btn.pause': { pl: '⏸ pauza (spacja)', en: '⏸ pause (space)' },
   'loading': { pl: 'Ładowanie assetów…', en: 'Loading assets…' },
   'polska.label': { pl: 'POLSKA', en: 'POLAND' },
 };

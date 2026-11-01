@@ -25,6 +25,9 @@ html, body { margin: 0; height: 100%; background: var(--bg); color: var(--ink); 
 #clock-box { text-align: center; }
 #clock { font-family: 'Press Start 2P', monospace; font-size: 20px; color: #fff; }
 #ticker { font-size: 17px; opacity: .85; min-height: 1.2em; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+#pausebtn { pointer-events: auto; margin-top: 4px; font-family: 'VT323', monospace; font-size: 15px; color: #cfd0e6; background: #0c0e22; border: 1px solid #3a3d5a; padding: 1px 8px; cursor: pointer; }
+#pausebtn:hover { color: #fff; border-color: #fff; }
+body.paused #pausebtn { color: #ffd166; border-color: #ffd166; }
 #polska-box .label { font-family: 'Press Start 2P', monospace; font-size: 11px; color: #fff; }
 #polska-bar { position: relative; height: 18px; background: #1a1030; border: 2px solid #fff; margin: 4px 0; }
 #polska-fill { height: 100%; background: linear-gradient(90deg, #fff 0 50%, #e03030 50% 100%); background-size: 200% 100%; width: 100%; transition: width .3s; }
@@ -126,6 +129,7 @@ body.mobile #log { display: none; position: absolute; left: 8px; right: 8px; top
 body.mobile.showlog #log { display: block; }
 body.mobile .fab { display: block; position: absolute; z-index: 3; font-family: 'VT323', monospace; font-size: 16px; color: #fff; background: rgba(8,10,24,.9); border: 2px solid #555; padding: 6px 10px; pointer-events: auto; }
 body.mobile #logbtn { right: 8px; top: 86px; }
+body.mobile #pausebtn { position: absolute; z-index: 3; right: 64px; top: 86px; margin: 0; font-size: 16px; padding: 6px 10px; border-width: 2px; background: rgba(8,10,24,.9); }
 body.mobile #cancelbtn { left: 8px; top: 86px; border-color: #ffd166; color: #ffd166; display: none; }
 body.mobile.selecting #cancelbtn { display: block; }
 body.mobile #toast { display: block; position: absolute; left: 50%; top: 138px; transform: translateX(-50%); max-width: 80%; font-size: 14px; line-height: 1.15; color: #fff; background: rgba(8,10,24,.92); border: 1px solid #444; padding: 4px 10px; opacity: 0; transition: opacity .3s; pointer-events: none; z-index: 2; }

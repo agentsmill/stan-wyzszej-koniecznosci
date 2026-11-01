@@ -76,9 +76,14 @@ const TOWERS = {
   },
   judge: {
     name: B('Sędzia w drzwiach', 'Judge in the doorway'), cost: 35, polska: 0.8, hp: 140, kind: 'aura', pushCap: 12,
-    range: 2.6, slow: 0.5, nearDoor: 2, maxAlive: 4, rebuildCooldown: 25,
-    desc: B('Spowalnia tłum, zatrzymuje Prezydenta na przepychankę. Max 4, tylko przy drzwiach.', 'Slows the crowd, holds the President in a scuffle. Max 4, doors only.'),
+    range: 2.6, slow: 0.5, nearDoor: 2, maxAlive: 5, rebuildCooldown: 20,
+    desc: B('Spowalnia tłum, zatrzymuje Prezydenta na przepychankę. Max 5, tylko przy drzwiach.', 'Slows the crowd, holds the President in a scuffle. Max 5, doors only.'),
     sprite: 'judge',
+  },
+  door: {
+    name: B('Zamknięte drzwi', 'Locked doors'), cost: 40, polska: 0.5, hp: 280, kind: 'block', pushCap: 15, onDoor: true, maxAlive: 2,
+    desc: B('Barykada w wejściu. Musi ją sforsować każdy, Prezydent też. Jedna na wejście.', 'A barricade in the entrance. Everyone has to force it, the President too. One per entrance.'),
+    sprite: 'barrier',
   },
   decree: {
     name: B('Zarządzenie', 'Decree'), cost: 30, polska: 0.8, hp: 50, kind: 'shoot',
@@ -93,7 +98,7 @@ const TOWERS = {
     sprite: 'phone',
   },
   immunity: {
-    name: B('Wniosek o immunitet', 'Immunity motion'), cost: 60, polska: 2, kind: 'target', dmg: 150,
+    name: B('Wniosek o immunitet', 'Immunity motion'), cost: 60, polska: 2, kind: 'target', dmg: 220,
     desc: B('„50 tomów akt." Kliknij bossa.', '"50 volumes of files." Click a boss.'),
     sprite: null,
   },
@@ -129,14 +134,14 @@ const UNITS = {
     sprites: ['protester', 'kibic', 'dresiarz'],
   },
   unionist: {
-    name: B('Związkowiec', 'Union member'), cost: 15, polska: 0.5, hp: 130, speed: 1.4, push: 9,
-    desc: B('Wolny, twardy. Piotr Duda wezwał.', 'Slow, tough. Piotr Duda called them in.'),
+    name: B('Związkowiec', 'Union member'), cost: 15, polska: 0.5, hp: 130, speed: 1.4, push: 12,
+    desc: B('Wolny, twardy, napiera najmocniej. Piotr Duda wezwał.', 'Slow, tough, pushes hardest. Piotr Duda called them in.'),
     sprites: ['unionist'],
   },
   mp: {
     name: B('Poseł z nożycami', 'MP with bolt cutters'), cost: 25, polska: 1, hp: 70, speed: 1.9, push: 3,
     cutter: true,
-    desc: B('Przecina furtkę. „Wg Onetu" to był poseł.', 'Cuts the side gate. "According to Onet" it was an MP.'),
+    desc: B('Przecina furtkę i barierki. „Wg Onetu" to był poseł.', 'Cuts the side gate and barriers. "According to Onet" it was an MP.'),
     sprites: ['mp'],
   },
   lawyer: {

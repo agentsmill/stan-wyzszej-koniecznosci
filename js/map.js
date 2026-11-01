@@ -97,7 +97,8 @@ const MAP = {
     if (!this.courtyard(gx, gy) && !(this.terrain[gy][gx] === 'S' && gy === 11)) return false; // dziedziniec + chodnik przed furtką
     if (this.solid[gy][gx] || this.towerAt[gy][gx] || this.gateAt(gx, gy)) return false;
     const t = this.terrain[gy][gx]; if (t === 'B' || t === 'H') return false;
-    if ((gx === this.doors.main.gx && gy === this.doors.main.gy) || (gx === this.doors.side.gx && gy === this.doors.side.gy)) return false;
+    const isDoor = (gx === this.doors.main.gx && gy === this.doors.main.gy) || (gx === this.doors.side.gx && gy === this.doors.side.gy);
+    if (isDoor !== !!def.onDoor) return false; // zamknięte drzwi tylko na wejściu, nic innego na wejściu
     if (def.nearDoor) {
       const d = Math.min(ISO.dist({ gx, gy }, this.doors.main), ISO.dist({ gx, gy }, this.doors.side));
       if (d > def.nearDoor) return false;

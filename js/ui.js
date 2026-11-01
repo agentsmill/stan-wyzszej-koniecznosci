@@ -6,13 +6,14 @@ const UI = {
   el: {}, cards: [], logLines: [],
   init(game) {
     const $ = id => document.getElementById(id);
-    ['hud', 'menu', 'loading', 'loading-pct', 'ending', 'ending-victory', 'ending-loss', 'ending-stats', 'side-name', 'side-slogan', 'clock', 'ticker', 'polska-fill', 'polska-val', 'resource-name', 'resource-val', 'log', 'cards', 'hint', 'loss-count', 'btn-other', 'btn-again', 'toast', 'logbtn', 'cancelbtn']
+    ['hud', 'menu', 'loading', 'loading-pct', 'ending', 'ending-victory', 'ending-loss', 'ending-stats', 'side-name', 'side-slogan', 'clock', 'ticker', 'polska-fill', 'polska-val', 'resource-name', 'resource-val', 'log', 'cards', 'hint', 'loss-count', 'btn-other', 'btn-again', 'toast', 'logbtn', 'cancelbtn', 'pausebtn']
       .forEach(id => this.el[id] = $(id));
     document.querySelectorAll('.side-btn').forEach(b => b.addEventListener('click', () => game.start(b.dataset.side)));
     this.el['btn-other'].addEventListener('click', () => game.start(SIDES[game.side].enemy));
     this.el['btn-again'].addEventListener('click', () => game.start(game.side));
     this.el.logbtn.addEventListener('click', () => document.body.classList.toggle('showlog'));
     this.el.cancelbtn.addEventListener('click', () => game.cancelSelection());
+    this.el.pausebtn.addEventListener('click', () => game.togglePause());
     const n = +localStorage.getItem('swk_losses') || 0;
     this.el['loss-count'].textContent = n ? T('ui.lossCount', { n, times: T(n === 1 ? 'ui.once' : 'ui.times') }) : '';
   },
@@ -56,6 +57,7 @@ const UI = {
   },
   ticker(text) { this.el.ticker.textContent = text; },
   setSelecting(on) { document.body.classList.toggle('selecting', !!on); },
+  setPaused(on) { document.body.classList.toggle('paused', !!on); this.el.pausebtn.textContent = T(on ? 'btn.resume' : 'btn.pause'); },
   log(text, cls = '') {
     if (document.body.classList.contains('mobile')) { const t = this.el.toast; t.textContent = text; t.classList.add('on'); clearTimeout(this._toastT); this._toastT = setTimeout(() => t.classList.remove('on'), 3200); }
     this.logLines.push({ text, cls }); if (this.logLines.length > 8) this.logLines.shift();
